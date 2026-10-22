@@ -18,7 +18,7 @@ export default function Footer() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
           minHeight: '520px'
         }}
       >
@@ -28,7 +28,7 @@ export default function Footer() {
             src="https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=1200&q=80"
             alt="Close-up die-cast metal racer from The Gents Dollhouse"
             style={{
-              width: '125%',
+              width: '100%',
               height: '100%',
               objectFit: 'cover',
               display: 'block'

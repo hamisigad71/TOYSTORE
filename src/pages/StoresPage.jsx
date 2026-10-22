@@ -46,7 +46,7 @@ export default function StoresPage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))',
           gap: '1.5rem',
           marginBottom: '3rem'
         }}
@@ -126,7 +126,7 @@ export default function StoresPage() {
         id="workshop-booking"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
           gap: '2rem'
         }}
       >

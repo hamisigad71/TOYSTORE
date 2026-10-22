@@ -349,7 +349,7 @@ export default function GlobalDrawers() {
               width: '100%',
               overflow: 'hidden',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
               boxShadow: 'var(--shadow-lg)'
             }}
           >

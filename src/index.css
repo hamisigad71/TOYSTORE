@@ -73,6 +73,9 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 body {
@@ -82,7 +85,14 @@ body {
   line-height: 1.5;
   letter-spacing: -0.01em;
   overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
   transition: background-color var(--transition-smooth), color var(--transition-smooth);
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -721,6 +731,9 @@ button, input, select, textarea {
   cursor: pointer;
   text-align: left;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   border: none;
   color: var(--text-primary);
   position: relative;
@@ -734,18 +747,42 @@ button, input, select, textarea {
   }
 }
 
-.floor-arch-card:hover,
-.floor-arch-card.active {
+.floor-arch-card:hover {
   background: var(--bg-elevated);
-  transform: translateX(6px);
+}
+
+@media (min-width: 768px) {
+  .floor-arch-card:hover,
+  .floor-arch-card.active {
+    background: var(--bg-elevated);
+    transform: translateX(6px);
+  }
+}
+
+@media (max-width: 767px) {
+  .floor-arch-card {
+    padding: 1rem 0.85rem;
+    gap: 0.85rem;
+  }
+  .floor-arch-card.active {
+    background: var(--bg-elevated);
+    transform: none !important;
+  }
 }
 
 .floor-arch-thumb {
   width: 100%;
+  max-width: 100%;
   height: 104px;
   object-fit: cover;
   display: block;
   background: #ffffff;
+}
+
+@media (max-width: 639px) {
+  .floor-arch-thumb {
+    height: 170px;
+  }
 }
 
 .floor-spotlight-panel {
@@ -962,8 +999,17 @@ button, input, select, textarea {
 /* Product Grid & Cards . Flat tone step */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .product-card {
@@ -974,6 +1020,9 @@ button, input, select, textarea {
   justify-content: space-between;
   transition: transform var(--transition-smooth), background-color var(--transition-smooth);
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .product-card:hover {
@@ -1236,4 +1285,190 @@ button, input, select, textarea {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2.5rem;
   padding: 4rem 0 3rem;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS & MARGIN OVERFLOW PREVENTION
+   Ensures all cards, headers, grids, and hero components fit within 100vw
+   ========================================================================== */
+.floors-architectural-grid,
+.floor-arch-stack,
+.floor-arch-card,
+.product-grid,
+.product-card,
+.tasteskill-hero-top,
+.tasteskill-hero-stage,
+.hero-masthead-card,
+.tasteskill-plinth-tile,
+.tasteskill-showcase,
+.container {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Utility Bar */
+  .utility-bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  /* Site Header & Search */
+  .header-main {
+    gap: 0.65rem;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .brand-logo {
+    max-width: 100%;
+  }
+
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    gap: 0.2rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 1;
+  }
+
+  .header-search {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+  }
+
+  .header-search input {
+    width: 100%;
+    height: 38px;
+    font-size: 0.82rem;
+    padding-left: 2rem;
+  }
+
+  .icon-btn {
+    height: 38px;
+    padding: 0 0.55rem;
+    flex-shrink: 0;
+  }
+
+  /* Hero & Plinth */
+  .tasteskill-hero {
+    padding: 1.25rem 0 2.5rem;
+  }
+
+  .tasteskill-wordmark {
+    font-size: clamp(2rem, 9.5vw, 3.2rem);
+    word-break: break-word;
+  }
+
+  .hero-masthead-card {
+    padding: 1rem;
+  }
+
+  .hero-masthead-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .hero-metric-box {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .tasteskill-plinth-tile {
+    padding: 1rem 0.85rem;
+  }
+
+  .plinth-specs-row {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .plinth-media-frame {
+    min-height: 220px;
+  }
+
+  .tasteskill-plinth-img {
+    height: 210px;
+  }
+
+  /* Showcase */
+  .tasteskill-showcase {
+    padding: 3rem 0;
+  }
+
+  .tasteskill-display-line {
+    font-size: clamp(1.85rem, 9vw, 3.2rem);
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1;
+  }
+
+  .tasteskill-showcase-object {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+    margin: 1.5rem auto;
+    transform: none;
+  }
+
+  /* Floor Showcase Section */
+  .tasteskill-poster-section {
+    padding: 2.75rem 0;
+  }
+
+  .floor-spotlight-panel {
+    padding: 1rem 0.85rem;
+    position: static;
+  }
+
+  .floor-spotlight-media {
+    height: 200px;
+  }
+
+  /* Receipt Slip */
+  .tasteskill-receipt-slip {
+    max-width: 100%;
+    padding: 1.75rem 1.15rem 2.5rem;
+  }
+
+  .tasteskill-receipt-section {
+    padding: 3rem 0;
+  }
+
+  /* FAQ */
+  .tasteskill-faq-item {
+    padding: 1rem;
+  }
+
+  /* Product Card adjustments */
+  .product-media {
+    height: 190px;
+  }
 }

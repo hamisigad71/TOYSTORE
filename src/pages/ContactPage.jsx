@@ -164,7 +164,7 @@ export default function ContactPage() {
       <section
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
           gap: '1.5rem',
           marginBottom: '2.5rem'
         }}
@@ -315,7 +315,7 @@ export default function ContactPage() {
       <section
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
           gap: '2rem',
           marginBottom: '3rem'
         }}
@@ -636,7 +636,7 @@ export default function ContactPage() {
         <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '1rem' }}>
           Customer Care Frequently Asked Questions
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0.85rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '0.85rem' }}>
           {FAQ_ITEMS.map((item, idx) => {
             const isOpen = openFaq === idx;
             return (

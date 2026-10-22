@@ -612,7 +612,8 @@ export default function HomePage() {
                               color: '#ffffff',
                               fontSize: '0.72rem',
                               fontWeight: 700,
-                              padding: '0.18rem 0.55rem'
+                              padding: '0.18rem 0.55rem',
+                              flexShrink: 0
                             }}
                           >
                             {room.floor}
@@ -621,7 +622,10 @@ export default function HomePage() {
                             style={{
                               fontSize: '0.84rem',
                               fontWeight: 700,
-                              color: 'var(--text-secondary)'
+                              color: 'var(--text-secondary)',
+                              flex: '1 1 auto',
+                              minWidth: '120px',
+                              wordBreak: 'break-word'
                             }}
                           >
                             {room.subtitle}
@@ -632,7 +636,7 @@ export default function HomePage() {
                               fontSize: '0.8rem',
                               fontWeight: 700,
                               color: 'var(--brand-primary)',
-                              marginLeft: 'auto'
+                              whiteSpace: 'nowrap'
                             }}
                           >
                             From {formatPrice(minPrice)}
@@ -667,7 +671,7 @@ export default function HomePage() {
                             display: 'flex',
                             alignItems: 'center',
                             flexWrap: 'wrap',
-                            gap: '0.85rem',
+                            gap: '0.75rem',
                             marginTop: '0.85rem'
                           }}
                         >
@@ -683,7 +687,8 @@ export default function HomePage() {
                               padding: '0.45rem 0.9rem',
                               fontSize: '0.8rem',
                               background: isSelected ? room.color : 'var(--bg-primary)',
-                              color: isSelected ? '#ffffff' : 'var(--text-primary)'
+                              color: isSelected ? '#ffffff' : 'var(--text-primary)',
+                              flexShrink: 0
                             }}
                           >
                             <span>Shop {room.floor} ({roomToys.length} Toys)</span>
@@ -694,7 +699,9 @@ export default function HomePage() {
                             style={{
                               fontSize: '0.8rem',
                               color: 'var(--text-muted)',
-                              fontWeight: 500
+                              fontWeight: 500,
+                              wordBreak: 'break-word',
+                              minWidth: 0
                             }}
                           >
                             Featured: {heroToy.name}
@@ -1030,7 +1037,7 @@ export default function HomePage() {
           className="container"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))',
             gap: '3.5rem',
             alignItems: 'start'
           }}
