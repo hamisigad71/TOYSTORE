@@ -7,8 +7,50 @@ import {
 } from '../data/toys';
 import ProductCard from '../components/ProductCard';
 import {
-  ArrowRightIcon
+  ArrowRightIcon,
+  SparklesIcon,
+  GiftIcon,
+  MapPinIcon
 } from '../components/Icons';
+
+const MINISO_SLIDES = [
+  {
+    tag: 'NEW DROP • 1:24 DIE-CAST ZINC ALLOY',
+    title: 'The Speed Garage 1F',
+    subtitle: 'Real metal weight, opening gullwing doors, authentic engine bay, working LED headlights & independent suspension.',
+    btnLabel: 'Shop Floor 1',
+    targetCategory: 'garage',
+    bg: 'linear-gradient(135deg, #e60012 0%, #99000c 100%)',
+    image: TOY_PRODUCTS[0]?.image || 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=1200&q=80'
+  },
+  {
+    tag: 'MINISO-STYLE BLIND BOX STUDIO • 1:72 CHASE ODDS',
+    title: 'Pop Open Mystery Capsules!',
+    subtitle: 'Pick a capsule from the tray, shake to listen for weight clues, and unseal rare secret gold variants into your collection vault.',
+    btnLabel: 'Open Mystery',
+    targetPage: 'blindbox',
+    bg: 'linear-gradient(135deg, #111827 0%, #1e1b4b 100%)',
+    image: TOY_PRODUCTS[3]?.image || 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1200&q=80'
+  },
+  {
+    tag: 'FLAGSHIP MULTI-BUY DEAL • 15% OFF 3+ TOYS',
+    title: 'Curate Your 3-Toy Collector Set',
+    subtitle: 'Pick any 3 models across all 6 floors and get 15% discount auto-deducted in your bag with 30-min Runda Mall pickup.',
+    btnLabel: '3-Toy Bundles',
+    targetPage: 'bundles',
+    bg: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+    image: TOY_PRODUCTS[1]?.image || 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=1200&q=80'
+  }
+];
+
+const MINISO_FLOORS = [
+  { id: 'garage', label: '1F Speed', sub: 'Die-Cast & RC', color: '#e11d48', icon: '🏎️', tag: 'HOT' },
+  { id: 'workshop', label: '2F Bricks', sub: 'Technic Builds', color: '#d97706', icon: '🧩', tag: '880-PC' },
+  { id: 'vault', label: '3F Mecha', sub: 'Action Figures', color: '#2563eb', icon: '🤖', tag: '32-JOINT' },
+  { id: 'blindbox', label: '4F Mystery', sub: 'Blind Boxes', color: '#e60012', icon: '🎁', tag: 'POP!' },
+  { id: 'arcade', label: '5F Tabletop', sub: 'Speed Cubes', color: '#059669', icon: '🎲', tag: 'PRO' },
+  { id: 'outdoor', label: 'Roof Sky', sub: 'Mini Drones', color: '#0284c7', icon: '🚁', tag: 'NEW' }
+];
 
 const PLINTH_SPECIMENS = [
   {
@@ -58,9 +100,20 @@ const PLINTH_SPECIMENS = [
 export default function HomePage() {
   const { navigate, setShopCategory, formatPrice, addToCart } = useStore();
   const [specimenIdx, setSpecimenIdx] = useState(0);
+  const [slideIdx, setSlideIdx] = useState(0);
   const [activeFloorId, setActiveFloorId] = useState('garage');
   const [homeTab, setHomeTab] = useState('all');
   const [receiptIds, setReceiptIds] = useState(['tgd-001', 'tgd-004', 'tgd-007']);
+
+  // Automatic hero slider cycle (6s)
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      if (!document.hidden) {
+        setSlideIdx((prev) => (prev + 1) % MINISO_SLIDES.length);
+      }
+    }, 6000);
+    return () => clearInterval(slideTimer);
+  }, []);
 
   // Signature slow-crossfade every 5.5s per taste-skill motion spec
   useEffect(() => {
@@ -72,6 +125,7 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, []);
 
+  const currentSlide = MINISO_SLIDES[slideIdx];
   const currentSpec = PLINTH_SPECIMENS[specimenIdx];
   const specimenProduct =
     TOY_PRODUCTS.find((p) => p.id === currentSpec.productId) || TOY_PRODUCTS[0];
@@ -94,8 +148,153 @@ export default function HomePage() {
 
   return (
     <div>
+      {/* MINISO-STYLE HERO BANNER CAROUSEL */}
+      <section className="container" style={{ paddingTop: '1rem' }}>
+        <div className="miniso-hero-slider" style={{ background: currentSlide.bg }}>
+          <div className="miniso-slide-item">
+            <div className="miniso-slide-content">
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.06em',
+                  background: 'rgba(0, 0, 0, 0.25)',
+                  color: '#ffffff',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '9999px',
+                  width: 'fit-content',
+                  marginBottom: '1rem',
+                  backdropFilter: 'blur(6px)'
+                }}
+              >
+                <SparklesIcon size={14} />
+                <span>{currentSlide.tag}</span>
+              </span>
+
+              <h2
+                style={{
+                  fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
+                  fontWeight: 900,
+                  color: currentSlide.textColor,
+                  lineHeight: 1.02,
+                  letterSpacing: '-0.035em',
+                  marginBottom: '0.85rem'
+                }}
+              >
+                {currentSlide.title}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+                  color: 'rgba(255, 255, 255, 0.92)',
+                  lineHeight: 1.5,
+                  maxWidth: '54ch',
+                  marginBottom: '1.75rem'
+                }}
+              >
+                {currentSlide.subtitle}
+              </p>
+
+              <div className="miniso-hero-btn-grid">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentSlide.targetPage) {
+                      navigate(currentSlide.targetPage);
+                    } else if (currentSlide.targetCategory) {
+                      setShopCategory(currentSlide.targetCategory);
+                      navigate('shop');
+                    }
+                  }}
+                  className="miniso-hero-btn"
+                  style={{
+                    background: '#ffffff',
+                    color: '#000000',
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  <span>{currentSlide.btnLabel}</span>
+                  <ArrowRightIcon size={15} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate('blindbox')}
+                  className="miniso-hero-btn"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.22)',
+                    color: '#ffffff',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255, 255, 255, 0.45)'
+                  }}
+                >
+                  <GiftIcon size={15} />
+                  <span>Mystery Studio</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="miniso-slide-visual">
+              <img
+                src={currentSlide.image}
+                alt={currentSlide.title}
+                className="miniso-slide-img"
+              />
+            </div>
+          </div>
+
+          {/* Slider Pagination Dots */}
+          <div className="miniso-slider-dots">
+            {MINISO_SLIDES.map((slide, i) => (
+              <button
+                key={slide.title}
+                type="button"
+                onClick={() => setSlideIdx(i)}
+                className={`miniso-dot-btn ${i === slideIdx ? 'active' : ''}`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* MINISO CIRCULAR 6-FLOOR FRANCHISE QUICK-STRIP */}
+        <div className="miniso-floor-strip-container">
+          <div className="miniso-floor-strip">
+            {MINISO_FLOORS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => {
+                  setActiveFloorId(f.id);
+                  setShopCategory(f.id);
+                  navigate('shop');
+                }}
+                className="miniso-floor-avatar-btn"
+                title={`Shop ${f.label}`}
+              >
+                <div
+                  className="miniso-floor-circle"
+                  style={{ background: f.color }}
+                >
+                  <span>{f.icon}</span>
+                  <span className="miniso-floor-tag">{f.tag}</span>
+                </div>
+                <div>
+                  <div className="miniso-floor-label">{f.label}</div>
+                  <div className="miniso-floor-sublabel">{f.sub}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 1. TASTESKILL HERO: Architectural Collector Stage & Interactive Specimen Plinth */}
-      <section className="container tasteskill-hero">
+      <section className="container tasteskill-hero" style={{ paddingTop: '0.5rem' }}>
         {/* Masthead Header + Storefront Metrics */}
         <div className="tasteskill-hero-top">
           <div>
@@ -1172,7 +1371,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. TASTESKILL FAQ: Wide heading, indented questions */}
-      <section className="container" style={{ padding: '6rem 1.5rem' }}>
+      <section className="container" style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem' }}>
         <div className="tasteskill-faq-grid">
           <div>
             <h2
@@ -1207,6 +1406,84 @@ export default function HomePage() {
                 </p>
               </details>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MINISO-STYLE OMNICHANNEL FLAGSHIP STORE BANNER */}
+      <section className="container">
+        <div className="miniso-store-banner">
+          <div>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: '#e60012',
+                color: '#fff',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '9999px',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                marginBottom: '0.85rem'
+              }}
+            >
+              <MapPinIcon size={14} />
+              <span>FLAGSHIP RETAIL ATRIUM</span>
+            </div>
+            <h2
+              style={{
+                fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
+                fontWeight: 900,
+                lineHeight: 1.1,
+                color: '#ffffff'
+              }}
+            >
+              Experience The Gents Dollhouse at Runda Mall 3F
+            </h2>
+            <p
+              style={{
+                fontSize: '1.02rem',
+                color: '#cbd5e1',
+                marginTop: '0.75rem',
+                maxWidth: '54ch',
+                lineHeight: 1.5
+              }}
+            >
+              Walk the 6-floor physical department layout in Nairobi! Enjoy 30-minute click &amp; collect counter pickup, live model unboxing tables, and certified safety inspections.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <a
+              href="https://wa.me/254742630973"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              style={{
+                background: '#25D366',
+                color: '#ffffff',
+                fontWeight: 800,
+                padding: '0.9rem 1.4rem',
+                borderRadius: '8px',
+                textAlign: 'center',
+                textDecoration: 'none'
+              }}
+            >
+              <span>Order via WhatsApp (0742630973)</span>
+            </a>
+            <button
+              type="button"
+              onClick={() => navigate('stores')}
+              className="btn btn-secondary"
+              style={{
+                borderRadius: '8px',
+                padding: '0.9rem 1.4rem'
+              }}
+            >
+              <span>View Mall Hours &amp; Directions</span>
+              <ArrowRightIcon size={16} />
+            </button>
           </div>
         </div>
       </section>

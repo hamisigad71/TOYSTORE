@@ -12,7 +12,9 @@ import {
   ShieldIcon,
   TruckIcon,
   GiftIcon,
-  XIcon
+  XIcon,
+  HomeIcon,
+  LayersIcon
 } from './Icons';
 
 const NAV_ITEMS = [
@@ -225,6 +227,57 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+
+      {/* Miniso Mobile Native Bottom Navigation Bar */}
+      <nav className="miniso-mobile-bottom-nav" aria-label="Mobile Navigation">
+        <button
+          type="button"
+          onClick={() => navigate('home')}
+          className={`miniso-bottom-nav-item ${page === 'home' ? 'active' : ''}`}
+        >
+          <HomeIcon size={20} />
+          <span>Home</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate('shop')}
+          className={`miniso-bottom-nav-item ${page === 'shop' || page === 'product' ? 'active' : ''}`}
+        >
+          <SearchIcon size={20} />
+          <span>Catalog</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate('rooms')}
+          className={`miniso-bottom-nav-item ${page === 'rooms' ? 'active' : ''}`}
+        >
+          <LayersIcon size={20} />
+          <span>6 Floors</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate('blindbox')}
+          className={`miniso-bottom-nav-item ${page === 'blindbox' ? 'active' : ''}`}
+        >
+          <GiftIcon size={20} />
+          <span>Mystery</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsCartOpen(true)}
+          className="miniso-bottom-nav-item"
+        >
+          <BagIcon size={20} />
+          <span>Bag</span>
+          {cartCount > 0 && (
+            <span className="miniso-bottom-badge">{cartCount}</span>
+          )}
+        </button>
+      </nav>
     </>
   );
 }

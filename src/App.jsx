@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
 import Navbar from './components/Navbar';
 import GlobalDrawers from './components/GlobalDrawers';
 import Footer from './components/Footer';
+import LoadingScreen from './components/LoadingScreen';
 
 // Full Multi-Page Views
 import HomePage from './pages/HomePage';
@@ -41,8 +42,11 @@ function StoreRouter() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <StoreProvider>
+      {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
       <StoreRouter />
     </StoreProvider>
   );
