@@ -757,7 +757,7 @@ export const TOY_PRODUCTS = [
     image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=80',
     gallery: [
       'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1608248597359-715783307a51?auto=format&fit=crop&w=900&q=80'
+      'https://i.pinimg.com/736x/a9/51/ca/a951ca81b8b97eff2b285af8d0198548.jpg'
     ],
     shortDesc: 'Silky micro-foam body wash infused with zesty Japanese Yuzu, botanical moisture ceramides, and refreshing citrus peel.',
     features: [
@@ -789,9 +789,9 @@ export const TOY_PRODUCTS = [
     material: 'Sakura Petals & Niacinamide',
     dimensions: '18.0 × 6.8 × 6.8 cm',
     variants: ['Tokyo Sakura Blossom', 'English Lavender Dream', 'Rose Hydrosol'],
-    image: 'https://images.unsplash.com/photo-1608248597359-715783307a51?auto=format&fit=crop&w=900&q=80',
+    image: 'https://i.pinimg.com/736x/a9/51/ca/a951ca81b8b97eff2b285af8d0198548.jpg',
     gallery: [
-      'https://images.unsplash.com/photo-1608248597359-715783307a51?auto=format&fit=crop&w=900&q=80'
+      'https://i.pinimg.com/736x/a9/51/ca/a951ca81b8b97eff2b285af8d0198548.jpg'
     ],
     shortDesc: 'Gentle floral shower gel with real suspended sakura petals that melt on skin, leaving a lasting delicate spring blossom perfume.',
     features: [

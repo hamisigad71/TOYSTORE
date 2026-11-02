@@ -8,47 +8,46 @@ import {
 import ProductCard from '../components/ProductCard';
 import {
   ArrowRightIcon,
-  SparklesIcon,
   GiftIcon,
   MapPinIcon
 } from '../components/Icons';
 
 const MINISO_SLIDES = [
   {
-    tag: 'MINISO LIFESTYLE & DAILY ESSENTIALS • RUNDA MALL 3F',
-    title: 'Shower Gels, 65W Chargers, Perfumes & Bags',
-    subtitle: 'Explore Japanese Yuzu shower gels, 65W GaN fast chargers, Nordic colognes, 24-hr vacuum water bottles, and shockproof laptop backpacks alongside collector toys.',
-    btnLabel: 'Shop Miniso Lifestyle',
+    tag: 'MINISO LIFESTYLE & TECH • 3F',
+    title: 'Miniso Daily Lifestyle & Tech',
+    subtitle: 'Japanese Yuzu shower gels, 65W GaN fast chargers, Nordic colognes, and commuter laptop bags.',
+    btnLabel: 'Shop Miniso',
     targetCategory: 'shower',
     bg: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1000&q=80'
   },
   {
-    tag: 'NEW DROP • 1:24 DIE-CAST ZINC ALLOY',
+    tag: 'NEW DROP • 1:24 DIE-CAST ZINC',
     title: 'The Speed Garage 1F',
-    subtitle: 'Real metal weight, opening gullwing doors, authentic engine bay, working LED headlights & independent suspension.',
+    subtitle: 'Real metal weight, opening gullwing doors, authentic engine bay, and working LED headlights.',
     btnLabel: 'Shop Floor 1',
     targetCategory: 'garage',
     bg: 'linear-gradient(135deg, #e60012 0%, #99000c 100%)',
-    image: TOY_PRODUCTS[0]?.image || 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=1200&q=80'
+    image: TOY_PRODUCTS[0]?.image || 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=1000&q=80'
   },
   {
-    tag: 'MINISO-STYLE BLIND BOX STUDIO • 1:72 CHASE ODDS',
+    tag: 'BLIND BOX STUDIO • 1:72 CHASE',
     title: 'Pop Open Mystery Capsules!',
-    subtitle: 'Pick a capsule from the tray, shake to listen for weight clues, and unseal rare secret gold variants into your collection vault.',
+    subtitle: 'Shake to listen for weight clues and unseal rare secret gold variants into your collection vault.',
     btnLabel: 'Open Mystery',
     targetPage: 'blindbox',
     bg: 'linear-gradient(135deg, #111827 0%, #1e1b4b 100%)',
-    image: TOY_PRODUCTS[3]?.image || 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1200&q=80'
+    image: TOY_PRODUCTS[3]?.image || 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1000&q=80'
   },
   {
-    tag: 'FLAGSHIP MULTI-BUY DEAL • 15% OFF 3+ ITEMS',
+    tag: 'MULTI-BUY DEAL • 15% OFF 3+',
     title: 'Curate Your 3-Item Set',
-    subtitle: 'Pick any 3 items across all Miniso lifestyle & toy departments and get 15% discount auto-deducted in your bag with 30-min Runda Mall pickup.',
+    subtitle: 'Pick any 3 items across all Miniso lifestyle & toy floors for 15% discount auto-deducted in bag.',
     btnLabel: '3-Item Bundles',
     targetPage: 'bundles',
     bg: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
-    image: 'https://i.pinimg.com/736x/4f/d2/83/4fd283198b0e61b7d5d543ded68c5341.jpg'
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80'
   }
 ];
 
@@ -270,8 +269,7 @@ export default function HomePage() {
           <div className="miniso-slide-item">
             <div className="miniso-slide-content">
               <span className="miniso-slide-tag">
-                <SparklesIcon size={13} />
-                <span>{currentSlide.tag}</span>
+                {currentSlide.tag}
               </span>
 
               <h2 className="miniso-slide-title">
