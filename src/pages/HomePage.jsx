@@ -48,7 +48,7 @@ const MINISO_SLIDES = [
     btnLabel: '3-Item Bundles',
     targetPage: 'bundles',
     bg: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80'
+    image: 'https://i.pinimg.com/736x/4f/d2/83/4fd283198b0e61b7d5d543ded68c5341.jpg'
   }
 ];
 
@@ -335,66 +335,36 @@ export default function HomePage() {
 
       {/* MINISO LIFESTYLE & DAILY ESSENTIALS SHOWCASE */}
       <section className="container" style={{ paddingTop: '0.5rem', paddingBottom: '3rem' }}>
-        <div
-          style={{
-            background: 'var(--bg-surface)',
-            border: '1.5px solid var(--border-color)',
-            borderRadius: 'var(--radius-xl)',
-            padding: 'clamp(1.25rem, 3vw, 2.25rem)',
-            boxShadow: 'var(--card-shadow)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
+        <div className="miniso-showcase-card">
           {/* Subtle decorative background accent */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               right: 0,
-              width: '240px',
-              height: '240px',
-              background: 'radial-gradient(circle at 100% 0%, rgba(230,0,18,0.1) 0%, transparent 70%)',
+              width: '280px',
+              height: '280px',
+              background: 'radial-gradient(circle at 100% 0%, rgba(230,0,18,0.12) 0%, transparent 70%)',
               pointerEvents: 'none'
             }}
           />
 
-          <div className="section-header" style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-                <span className="badge badge-red">
-                  MINISO SIGNATURE ESSENTIALS
-                </span>
-                <span className="badge" style={{ background: '#06b6d4', color: '#fff' }}>
-                  🚿 SHOWER GELS
-                </span>
-                <span className="badge" style={{ background: '#8b5cf6', color: '#fff' }}>
-                  ⚡ 65W CHARGERS
-                </span>
-                <span className="badge" style={{ background: '#ec4899', color: '#fff' }}>
-                  🌸 PERFUMES
-                </span>
-                <span className="badge" style={{ background: '#14b8a6', color: '#fff' }}>
-                  🥤 WATER BOTTLES
-                </span>
-                <span className="badge" style={{ background: '#f59e0b', color: '#fff' }}>
-                  🎒 LAPTOP BAGS
-                </span>
+          {/* Clean, Modern Miniso Header */}
+          <div className="miniso-showcase-header">
+            <div className="miniso-showcase-info">
+              <div className="miniso-brand-pill">
+                <span className="miniso-brand-tag">MINISO</span>
+                <span className="miniso-brand-dot" />
+                <span className="miniso-brand-subtitle">Everyday Lifestyle &amp; Tech</span>
+                <span className="miniso-brand-verified">✓ Authentic</span>
               </div>
-              <h2
-                style={{
-                  fontFamily: 'var(--font-google-display)',
-                  fontSize: 'clamp(1.85rem, 3.5vw, 2.85rem)',
-                  fontWeight: 800,
-                  lineHeight: 1.05,
-                  letterSpacing: '-0.03em',
-                  color: 'var(--text-primary)'
-                }}
-              >
-                Miniso Everyday Lifestyle &amp; Tech Essentials
+
+              <h2 className="miniso-showcase-title">
+                Curated Everyday Essentials
               </h2>
-              <p className="section-subtitle" style={{ maxWidth: '64ch', marginTop: '0.45rem' }}>
-                Beyond toys: discover Miniso’s iconic personal care, high-speed GaN fast charging, long-lasting Parisian fragrances, 24-hr ice-cold tumblers, and shockproof commuter laptop backpacks—all safety certified and ready for Nairobi same-day dispatch.
+
+              <p className="miniso-showcase-desc">
+                From Japanese botanical shower gels and 65W GaN fast chargers to long-lasting Parisian perfumes, 24-hr vacuum flasks, and shockproof commuter backpacks.
               </p>
             </div>
 
@@ -404,11 +374,10 @@ export default function HomePage() {
                 setShopCategory('all');
                 navigate('shop');
               }}
-              className="btn btn-primary"
-              style={{ flexShrink: 0 }}
+              className="miniso-showcase-cta"
             >
-              <span>Browse All 28 Products</span>
-              <ArrowRightIcon size={15} />
+              <span>Explore All {allLifestyleProducts.length} Items</span>
+              <ArrowRightIcon size={14} />
             </button>
           </div>
 
