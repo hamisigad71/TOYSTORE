@@ -1,673 +1,653 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Floor definitions for the architectural glass elevator
 const FLOORS = [
-  { id: '1F', icon: '🏎️', name: 'Speed Garage', desc: 'Die-cast 1:24 supercars & RC racers' },
-  { id: '2F', icon: '🧩', name: 'Brick & Gear Lab', desc: '880-pc steam locomotive & technic kits' },
-  { id: '3F', icon: '🤖', name: 'Mecha & Figures', desc: '32-joint articulated titan robots' },
-  { id: '4F', icon: '🎁', name: 'Blind Box Alley', desc: 'Mystery gashapon capsules & 1:72 secret chase' },
-  { id: '5F', icon: '🎲', name: 'Retro & Cubes', desc: 'Magnetic speed cubes & tabletop classics' },
-  { id: 'ROOF', icon: '🚁', name: 'Sky Arena', desc: 'Altitude-hold quadcopters & aerobatic jets' },
+  { id: '1F', num: '1F', name: 'Speed Garage', tag: 'Die-cast 1:24 supercars & RC racers', code: 'SHAFT-01' },
+  { id: '2F', num: '2F', name: 'Brick & Gear Lab', tag: '880-pc steam locomotive & technic kits', code: 'SHAFT-02' },
+  { id: '3F', num: '3F', name: 'Hero & Mecha Vault', tag: '32-joint articulated titan robots', code: 'SHAFT-03' },
+  { id: '4F', num: '4F', name: 'Mystery Capsule Alley', tag: 'Pop-Mart blind boxes & 1:72 chase', code: 'SHAFT-04' },
+  { id: '5F', num: '5F', name: 'Tabletop & Retro Den', tag: 'Magnetic speed cubes & classic kits', code: 'SHAFT-05' },
+  { id: 'ROOF', num: 'RF', name: 'Sky Arena Flagship', tag: 'High-altitude drones & main entrance', code: 'DECK-SKY' },
 ];
 
 export default function LoadingScreen({ onFinish }) {
   const [progress, setProgress] = useState(0);
-  const [floorIndex, setFloorIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
-  const [boxTaps, setBoxTaps] = useState(0);
-  const [burstParticles, setBurstParticles] = useState([]);
-  const hasFinishedRef = useRef(false);
+  const [currentFloorIdx, setCurrentFloorIdx] = useState(0);
+  const [velocity, setVelocity] = useState('0.00');
+  const [doorsOpening, setDoorsOpening] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const finishTriggered = useRef(false);
 
-  // Fast, smooth realistic progress ramp with elevator floor checkpoints
+  // Exact 3.5 seconds duration (3500ms)
   useEffect(() => {
-    const startTime = Date.now();
-    const duration = 2800; // ~2.8 seconds total for an engaging yet snappy experience
+    const startTime = performance.now();
+    const DURATION = 3500; // Exactly 3.5s per request
 
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const rawProgress = Math.min(100, Math.round((elapsed / duration) * 100));
+    let rafId;
 
-      setProgress(rawProgress);
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const rawRatio = Math.min(1, elapsed / DURATION);
 
-      // Map progress to the 6 floors
-      const currentFloor = Math.min(FLOORS.length - 1, Math.floor((rawProgress / 100) * FLOORS.length));
-      setFloorIndex(currentFloor);
+      // Smooth realistic elevator acceleration curve (cubic ease-out with smooth cruise)
+      const easedProgress = Math.min(100, Math.round(rawRatio * 100));
+      setProgress(easedProgress);
 
-      if (rawProgress >= 100 && !hasFinishedRef.current) {
-        hasFinishedRef.current = true;
-        clearInterval(timer);
-        setTimeout(() => {
-          setIsFading(true);
-          setTimeout(() => {
-            if (onFinish) onFinish();
-          }, 450);
-        }, 500);
+      // Update floor index (0 to 5)
+      const floorIndex = Math.min(FLOORS.length - 1, Math.floor(rawRatio * FLOORS.length));
+      setCurrentFloorIdx(floorIndex);
+
+      // Simulated realistic elevator velocity (accelerates to 2.80 m/s then glides to stop)
+      let v = 0;
+      if (rawRatio < 0.25) {
+        v = (rawRatio / 0.25) * 2.8;
+      } else if (rawRatio < 0.85) {
+        v = 2.8 - (rawRatio - 0.25) * 0.4;
+      } else {
+        v = Math.max(0, (1 - rawRatio) / 0.15 * 2.5);
       }
-    }, 45);
+      setVelocity(v.toFixed(2));
 
-    return () => clearInterval(timer);
+      if (rawRatio < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        // Reached 100% at 3.5s -> Trigger elevator doors opening & transition
+        if (!finishTriggered.current) {
+          finishTriggered.current = true;
+          setDoorsOpening(true);
+
+          setTimeout(() => {
+            setIsFadingOut(true);
+            setTimeout(() => {
+              if (onFinish) onFinish();
+            }, 350);
+          }, 450);
+        }
+      }
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(rafId);
   }, [onFinish]);
 
-  // Handle playful tap on mystery box
-  const handleTapBox = (e) => {
-    setBoxTaps((prev) => prev + 1);
-    const rect = e.currentTarget.getBoundingClientRect();
-    const emojis = ['✨', '🎁', '🏎️', '🤖', '🧩', '⭐', '💎', '🔥'];
-    const newParticles = Array.from({ length: 6 }).map((_, i) => ({
-      id: Date.now() + i + Math.random(),
-      emoji: emojis[Math.floor(Math.random() * emojis.length)],
-      x: (Math.random() - 0.5) * 140,
-      y: -20 - Math.random() * 80,
-    }));
-    setBurstParticles((prev) => [...prev.slice(-12), ...newParticles]);
+  const handleSkip = () => {
+    if (finishTriggered.current) return;
+    finishTriggered.current = true;
+    setDoorsOpening(true);
     setTimeout(() => {
-      setBurstParticles((prev) => prev.filter((p) => !newParticles.find((np) => np.id === p.id)));
-    }, 800);
+      setIsFadingOut(true);
+      setTimeout(() => {
+        if (onFinish) onFinish();
+      }, 200);
+    }, 250);
   };
 
-  const activeFloor = FLOORS[floorIndex] || FLOORS[0];
+  const currentFloor = FLOORS[currentFloorIdx] || FLOORS[0];
 
   return (
     <aside
-      aria-label="Loading Store"
+      aria-label="Store Concourse Elevator"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
-        background: 'radial-gradient(circle at 50% 25%, #1a1f2e 0%, #0a0d14 75%, #05070a 100%)',
+        background: '#04070d',
         color: '#ffffff',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: 'clamp(1rem, 3vh, 2rem) clamp(1rem, 4vw, 2.5rem)',
-        opacity: isFading ? 0 : 1,
-        transform: isFading ? 'scale(1.02)' : 'scale(1)',
-        transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s ease-out',
-        pointerEvents: isFading ? 'none' : 'auto',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: "'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        opacity: isFadingOut ? 0 : 1,
+        transition: 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
         overflow: 'hidden',
         userSelect: 'none',
         WebkitUserSelect: 'none',
       }}
     >
-      {/* Ambient background light spheres */}
+      {/* 1. REALISTIC ATRIUM BACKGROUND IMAGE (User-supplied wallpaper with smooth upward parallax) */}
       <div
+        aria-hidden="true"
         style={{
           position: 'absolute',
-          top: '20%',
-          left: '50%',
-          width: 'min(90vw, 420px)',
-          height: 'min(90vw, 420px)',
-          background: 'radial-gradient(circle, rgba(230,0,18,0.22) 0%, rgba(251,191,36,0.08) 45%, transparent 70%)',
-          transform: 'translate(-50%, -50%)',
-          filter: 'blur(35px)',
+          inset: '-8% -5%',
+          backgroundImage: 'url("https://i.pinimg.com/736x/4d/07/bd/4d07bd637b424da4a24e4b580367ec18.jpg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 40%',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.42,
+          filter: 'brightness(0.85) contrast(1.15)',
+          transform: `translateY(${progress * 0.14}px) scale(1.04)`,
+          transition: 'transform 0.08s linear',
           pointerEvents: 'none',
-          animation: 'pulseAura 3s ease-in-out infinite alternate',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '5%',
-          right: '10%',
-          width: '260px',
-          height: '260px',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)',
-          filter: 'blur(45px)',
-          pointerEvents: 'none',
+          zIndex: 1,
         }}
       />
 
-      {/* Top Header Row */}
-      <header
+      {/* 2. ARCHITECTURAL GALLERIA ATRIUM DEPTH OVERLAY */}
+      <div
+        aria-hidden="true"
         style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse at 50% 30%, rgba(15, 23, 42, 0.2) 0%, rgba(4, 7, 13, 0.88) 85%, #020408 100%)',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      />
+
+      {/* 3. VERTICAL ELEVATOR GUIDE RAILS & CABLE LINES */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 3,
+          display: 'flex',
+          justifyContent: 'space-between',
+          padding: '0 6vw',
+        }}
+      >
+        {/* Left Shaft Cable & Structural Column */}
+        <div
+          style={{
+            width: '1px',
+            height: '100%',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.05) 100%)',
+            boxShadow: '12px 0 24px rgba(0,0,0,0.6)',
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: `${(progress * 1.8) % 100}%`,
+              left: '-2px',
+              width: '5px',
+              height: '30px',
+              background: 'rgba(230,0,18,0.7)',
+              filter: 'blur(1px)',
+              transition: 'top 0.05s linear',
+            }}
+          />
+        </div>
+
+        {/* Right Shaft Cable & Structural Column */}
+        <div
+          style={{
+            width: '1px',
+            height: '100%',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.05) 100%)',
+            boxShadow: '-12px 0 24px rgba(0,0,0,0.6)',
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: `${(progress * 1.8) % 100}%`,
+              right: '-2px',
+              width: '5px',
+              height: '30px',
+              background: 'rgba(230,0,18,0.7)',
+              filter: 'blur(1px)',
+              transition: 'top 0.05s linear',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 4. OPTICAL GLASS REFLECTION SHEEN (Angled sweep across the car) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(125deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 25%, transparent 35%, transparent 65%, rgba(255,255,255,0.03) 80%, transparent 100%)',
+          pointerEvents: 'none',
+          zIndex: 4,
+        }}
+      />
+
+      {/* 5. TOP HEADER BAR: BRAND BADGE & SKIP BUTTON */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: '1.25rem 1.75rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '100%',
-          maxWidth: '560px',
-          margin: '0 auto',
-          zIndex: 2,
+          zIndex: 20,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        {/* Brand Plaque */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
           <div
             style={{
-              width: '36px',
-              height: '36px',
-              background: 'linear-gradient(135deg, #e60012 0%, #b8000e 100%)',
-              borderRadius: '9px',
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
+              background: 'linear-gradient(145deg, #ff1a2b, #b3000d)',
+              border: '1px solid rgba(255,255,255,0.3)',
+              boxShadow: '0 4px 16px rgba(230,0,18,0.5)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(230,0,18,0.4)',
-              border: '1px solid rgba(255,255,255,0.2)',
+              fontWeight: 900,
+              fontSize: '0.62rem',
+              lineHeight: 1,
+              letterSpacing: '0.04em',
             }}
           >
-            <span style={{ fontSize: '0.52rem', fontWeight: 900, lineHeight: 1, letterSpacing: '0.04em' }}>GENTS</span>
-            <span style={{ fontSize: '0.66rem', fontWeight: 900, lineHeight: 1, marginTop: '1px' }}>TOYS</span>
+            <span>GENTS</span>
+            <span style={{ fontSize: '0.72rem', marginTop: '1px' }}>TOYS</span>
           </div>
+
           <div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 800, letterSpacing: '-0.01em', lineHeight: 1.1 }}>
+            <div style={{ fontSize: '0.92rem', fontWeight: 800, letterSpacing: '-0.01em', color: '#f8fafc' }}>
               The Gents Dollhouse
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '2px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e' }} />
-              Runda Mall 3F • Express Elevator
+            <div style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '1px' }}>
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#22c55e',
+                  boxShadow: '0 0 8px #22c55e',
+                  display: 'inline-block',
+                }}
+              />
+              Runda Mall • Panoramic Express Car
             </div>
           </div>
         </div>
 
-        {/* Skip button */}
+        {/* Skip Button */}
         <button
           type="button"
-          onClick={() => {
-            setIsFading(true);
-            setTimeout(() => {
-              if (onFinish) onFinish();
-            }, 300);
-          }}
+          onClick={handleSkip}
+          aria-label="Skip to store"
           style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: '#e2e8f0',
-            fontSize: '0.74rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            padding: '0.4rem 0.85rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            padding: '0.45rem 0.95rem',
             borderRadius: '9999px',
-            backdropFilter: 'blur(8px)',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: '#e2e8f0',
+            background: 'rgba(30, 41, 59, 0.65)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+            cursor: 'pointer',
             transition: 'all 0.2s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            e.currentTarget.style.background = 'rgba(230, 0, 18, 0.85)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+            e.currentTarget.style.background = 'rgba(30, 41, 59, 0.65)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
           }}
         >
-          Skip Intro →
+          <span>Skip Intro</span>
+          <span style={{ fontSize: '0.85rem' }}>➔</span>
         </button>
-      </header>
+      </div>
 
-      {/* Main Interactive Center Section */}
-      <section
+      {/* 6. MAIN ARCHITECTURAL TITANIUM ELEVATOR CONSOLE */}
+      <div
         style={{
+          position: 'relative',
+          zIndex: 15,
+          width: '92%',
+          maxWidth: '520px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          flex: 1,
-          width: '100%',
-          maxWidth: '520px',
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 2,
-          padding: '0.75rem 0',
         }}
       >
-        {/* Burst particles when tapping box */}
-        {burstParticles.map((p) => (
-          <span
-            key={p.id}
-            style={{
-              position: 'absolute',
-              top: '42%',
-              left: '50%',
-              transform: `translate(calc(-50% + ${p.x}px), ${p.y}px)`,
-              fontSize: '1.4rem',
-              pointerEvents: 'none',
-              animation: 'fadeFloat 0.8s ease-out forwards',
-              zIndex: 10,
-            }}
-          >
-            {p.emoji}
-          </span>
-        ))}
-
-        {/* 3D Floating Mystery Capsule Container */}
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={handleTapBox}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleTapBox(e);
-            }
-          }}
-          title="Tap the Mystery Capsule for good luck!"
-          style={{
-            position: 'relative',
-            width: '160px',
-            height: '160px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            touchAction: 'manipulation',
-            marginBottom: '1rem',
-          }}
-        >
-          {/* Orbital Gyroscope Ring 1 */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: '-10px',
-              borderRadius: '50%',
-              border: '2px dashed rgba(251, 191, 36, 0.45)',
-              animation: 'spinOrbit 7s linear infinite',
-              pointerEvents: 'none',
-            }}
-          />
-
-          {/* Orbital Gyroscope Ring 2 */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: '-24px',
-              borderRadius: '50%',
-              border: '1.5px solid rgba(230, 0, 18, 0.35)',
-              borderTopColor: '#e60012',
-              borderBottomColor: '#fbbf24',
-              animation: 'spinOrbitReverse 5s linear infinite',
-              pointerEvents: 'none',
-            }}
-          />
-
-          {/* Glowing pedestal shadow under the floating capsule */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-12px',
-              width: '110px',
-              height: '24px',
-              background: 'radial-gradient(ellipse, rgba(230,0,18,0.55) 0%, rgba(0,0,0,0.6) 50%, transparent 80%)',
-              borderRadius: '50%',
-              animation: 'shadowPulse 3s ease-in-out infinite',
-            }}
-          />
-
-          {/* The 3D PopMart / Miniso Mystery Blind Box */}
-          <div
-            key={boxTaps}
-            style={{
-              width: '104px',
-              height: '108px',
-              background: 'linear-gradient(145deg, #ff1a2b 0%, #b8000e 65%, #7a0008 100%)',
-              borderRadius: '24px',
-              boxShadow: '0 18px 38px rgba(230, 0, 18, 0.45), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -6px 12px rgba(0,0,0,0.4)',
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '2px solid rgba(255, 230, 150, 0.65)',
-              animation: boxTaps > 0 ? 'wobbleBox 0.5s ease' : 'floatBox 3s ease-in-out infinite',
-              transformStyle: 'preserve-3d',
-            }}
-          >
-            {/* Golden Ribbon Vertical */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                width: '18px',
-                background: 'linear-gradient(90deg, #d97706, #fbbf24 45%, #fffbeb 60%, #b45309 100%)',
-                boxShadow: '0 0 8px rgba(251, 191, 36, 0.5)',
-              }}
-            />
-
-            {/* Golden Ribbon Horizontal */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                height: '18px',
-                background: 'linear-gradient(180deg, #d97706, #fbbf24 45%, #fffbeb 60%, #b45309 100%)',
-                boxShadow: '0 0 8px rgba(251, 191, 36, 0.5)',
-              }}
-            />
-
-            {/* Ribbon Knot / Golden Medallion */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '42px',
-                height: '42px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, #fef08a 0%, #f59e0b 70%, #78350f 100%)',
-                boxShadow: '0 4px 10px rgba(0,0,0,0.4), 0 0 12px rgba(251, 191, 36, 0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.25rem',
-                border: '1.5px solid #ffffff',
-                zIndex: 3,
-              }}
-            >
-              {activeFloor.icon}
-            </div>
-
-            {/* Mystery Blind Box Label Tag */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-10px',
-                background: '#ffffff',
-                color: '#e60012',
-                fontSize: '0.62rem',
-                fontWeight: 900,
-                padding: '2px 8px',
-                borderRadius: '9999px',
-                boxShadow: '0 3px 8px rgba(0,0,0,0.3)',
-                letterSpacing: '0.04em',
-                whiteSpace: 'nowrap',
-                border: '1px solid #fed7aa',
-                zIndex: 4,
-              }}
-            >
-              1:72 GOLD CHASE
-            </div>
-          </div>
-        </div>
-
-        {/* Tap Prompt Hint */}
-        <div
-          style={{
-            fontSize: '0.7rem',
-            color: '#cbd5e1',
-            background: 'rgba(255,255,255,0.06)',
-            padding: '3px 10px',
-            borderRadius: '9999px',
-            marginBottom: '1.25rem',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          🎁 Tap capsule to peek • {boxTaps > 0 ? `Luck +${boxTaps * 10}%!` : 'Gashapon Mode'}
-        </div>
-
-        {/* Live Elevator Telemetry Card */}
+        {/* OVERHEAD BRUSHED TITANIUM HOUSING */}
         <div
           style={{
             width: '100%',
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(16px)',
-            borderRadius: '16px',
-            padding: '1rem clamp(0.75rem, 3vw, 1.25rem)',
-            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem',
+            background: 'linear-gradient(180deg, #2a3342 0%, #171f2b 55%, #0f1622 100%)',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.16)',
+            boxShadow: '0 24px 60px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.6)',
+            padding: '1.5rem 1.6rem',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* Floor Ascent Line / Stepper */}
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.55rem',
-              }}
-            >
+          {/* Subtle Brushed Metal Texture Sheen */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 4px)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Hex Screws in the Corners for Architectural Authenticity */}
+          <div style={{ position: 'absolute', top: '10px', left: '12px', color: 'rgba(255,255,255,0.25)', fontSize: '0.55rem', fontFamily: 'monospace' }}>⊙</div>
+          <div style={{ position: 'absolute', top: '10px', right: '12px', color: 'rgba(255,255,255,0.25)', fontSize: '0.55rem', fontFamily: 'monospace' }}>⊙</div>
+          <div style={{ position: 'absolute', bottom: '10px', left: '12px', color: 'rgba(255,255,255,0.25)', fontSize: '0.55rem', fontFamily: 'monospace' }}>⊙</div>
+          <div style={{ position: 'absolute', bottom: '10px', right: '12px', color: 'rgba(255,255,255,0.25)', fontSize: '0.55rem', fontFamily: 'monospace' }}>⊙</div>
+
+          {/* TOP STATUS LINE: ELEVATOR ID & VELOCITY TELEMETRY */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '0.68rem',
+              fontWeight: 800,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: '#94a3b8',
+              marginBottom: '1rem',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              paddingBottom: '0.55rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
               <span
                 style={{
-                  fontSize: '0.68rem',
-                  fontWeight: 800,
-                  color: '#94a3b8',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
+                  color: '#e60012',
+                  animation: 'pulse 1s infinite',
+                  display: 'inline-block',
                 }}
               >
-                Express Elevator Deck
+                ▲
               </span>
-              <span
-                style={{
-                  fontSize: '0.74rem',
-                  fontWeight: 900,
-                  color: '#fbbf24',
-                  fontFamily: 'monospace',
-                }}
-              >
-                LEVEL {activeFloor.id}
-              </span>
+              <span>ASCENDING EXPRESS</span>
             </div>
 
-            {/* 6-Floor Badge Strip */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(6, 1fr)',
-                gap: '4px',
-                position: 'relative',
-              }}
-            >
-              {FLOORS.map((floor, idx) => {
-                const isActive = idx === floorIndex;
-                const isPassed = idx < floorIndex;
-                return (
-                  <div
-                    key={floor.id}
-                    style={{
-                      background: isActive
-                        ? 'linear-gradient(135deg, #e60012 0%, #fbbf24 100%)'
-                        : isPassed
-                        ? 'rgba(230, 0, 18, 0.25)'
-                        : 'rgba(255, 255, 255, 0.05)',
-                      border: isActive
-                        ? '1.5px solid #ffffff'
-                        : isPassed
-                        ? '1px solid rgba(230, 0, 18, 0.4)'
-                        : '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '8px',
-                      padding: '0.4rem 0.2rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '2px',
-                      transition: 'all 0.25s ease',
-                      boxShadow: isActive ? '0 0 14px rgba(230, 0, 18, 0.7)' : 'none',
-                      transform: isActive ? 'scale(1.08)' : 'scale(1)',
-                    }}
-                  >
-                    <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>{floor.icon}</span>
-                    <span
-                      style={{
-                        fontSize: '0.65rem',
-                        fontWeight: isActive ? 900 : 700,
-                        color: isActive ? '#ffffff' : isPassed ? '#fca5a5' : '#64748b',
-                        lineHeight: 1,
-                      }}
-                    >
-                      {floor.id}
-                    </span>
-                  </div>
-                );
-              })}
+            <div style={{ fontFamily: 'monospace', color: '#cbd5e1' }}>
+              SPEED: <span style={{ color: '#ff4d5a', fontWeight: 900 }}>{velocity}</span> M/S
             </div>
           </div>
 
-          {/* High-Tech Progress Bar */}
-          <div>
+          {/* MAIN DIGITAL LED SEGMENTED READOUT PANEL */}
+          <div
+            style={{
+              background: '#06090e',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: 'inset 0 4px 16px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0,0,0,0.4)',
+              padding: '1.25rem 1.4rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            {/* LED Matrix Screen Scanlines */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 3px)',
+                pointerEvents: 'none',
+                zIndex: 2,
+              }}
+            />
+
+            {/* Glowing Big Digital Floor Readout */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', zIndex: 3 }}>
+              <div
+                style={{
+                  fontSize: '3.6rem',
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  fontFamily: "'Courier New', Courier, monospace",
+                  color: '#ff2a3a',
+                  textShadow: '0 0 16px rgba(255, 42, 58, 0.9), 0 0 32px rgba(230, 0, 18, 0.5), 0 0 4px #ffffff',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {currentFloor.num}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.7rem', color: '#ff808b', fontWeight: 800, letterSpacing: '0.1em' }}>
+                  LEVEL
+                </span>
+                <span style={{ fontSize: '0.62rem', color: '#64748b', fontFamily: 'monospace' }}>
+                  {currentFloor.code}
+                </span>
+              </div>
+            </div>
+
+            {/* Floor Name & Live Destination Description */}
+            <div style={{ textAlign: 'right', maxWidth: '62%', zIndex: 3 }}>
+              <div
+                style={{
+                  fontSize: '1.05rem',
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  letterSpacing: '-0.01em',
+                  textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+                }}
+              >
+                {currentFloor.name}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.72rem',
+                  color: '#94a3b8',
+                  marginTop: '0.25rem',
+                  lineHeight: 1.3,
+                }}
+              >
+                {currentFloor.tag}
+              </div>
+            </div>
+          </div>
+
+          {/* 7. BRUSHED METAL CALL BUTTON DECK (1F to ROOF with illuminated halo rings) */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(6, 1fr)',
+              gap: '0.6rem',
+              marginTop: '1.25rem',
+              position: 'relative',
+              zIndex: 3,
+            }}
+          >
+            {FLOORS.map((f, idx) => {
+              const isPastOrCurrent = idx <= currentFloorIdx;
+              const isCurrent = idx === currentFloorIdx;
+
+              return (
+                <div
+                  key={f.id}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: isCurrent
+                        ? 'radial-gradient(circle at 35% 30%, #ff4d5a, #b3000d)'
+                        : isPastOrCurrent
+                        ? 'radial-gradient(circle at 35% 30%, #3b4252, #1f2430)'
+                        : 'radial-gradient(circle at 35% 30%, #202734, #0f141d)',
+                      border: isCurrent
+                        ? '2px solid #ffffff'
+                        : isPastOrCurrent
+                        ? '1.5px solid rgba(230, 0, 18, 0.7)'
+                        : '1.5px solid rgba(255, 255, 255, 0.12)',
+                      boxShadow: isCurrent
+                        ? '0 0 18px rgba(255, 42, 58, 0.85), inset 0 2px 4px rgba(255,255,255,0.4)'
+                        : isPastOrCurrent
+                        ? '0 0 10px rgba(230, 0, 18, 0.35), inset 0 1px 2px rgba(255,255,255,0.2)'
+                        : 'inset 0 2px 4px rgba(0,0,0,0.6)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 900,
+                      color: isCurrent ? '#ffffff' : isPastOrCurrent ? '#ffd4d8' : '#64748b',
+                      transition: 'all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                      transform: isCurrent ? 'scale(1.08)' : 'scale(1)',
+                    }}
+                  >
+                    {f.num}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.58rem',
+                      fontWeight: 700,
+                      color: isCurrent ? '#ff4d5a' : isPastOrCurrent ? '#cbd5e1' : '#475569',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {f.id}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 8. LASER TRANSIT PROGRESS TRACK */}
+          <div style={{ marginTop: '1.35rem', position: 'relative', zIndex: 3 }}>
             <div
               style={{
-                height: '9px',
-                background: 'rgba(0, 0, 0, 0.4)',
-                borderRadius: '9999px',
-                overflow: 'hidden',
-                position: 'relative',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '0.68rem',
+                color: '#94a3b8',
+                marginBottom: '0.4rem',
+                fontFamily: 'monospace',
               }}
             >
+              <span>SHAFT TRAVEL DISTANCE</span>
+              <span style={{ color: '#f8fafc', fontWeight: 900 }}>{progress}%</span>
+            </div>
+
+            {/* Recessed Laser Track Bar */}
+            <div
+              style={{
+                height: '8px',
+                width: '100%',
+                background: '#090d15',
+                borderRadius: '9999px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                padding: '1px',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.8)',
+              }}
+            >
+              {/* Glowing Laser Red Fill Bar */}
               <div
                 style={{
                   height: '100%',
                   width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #e60012 0%, #f59e0b 50%, #fbbf24 100%)',
+                  background: 'linear-gradient(90deg, #b3000d 0%, #ff1a2b 75%, #ffffff 100%)',
                   borderRadius: '9999px',
-                  boxShadow: '0 0 12px rgba(230, 0, 18, 0.8)',
-                  transition: 'width 0.08s ease-out',
-                  position: 'relative',
+                  boxShadow: '0 0 12px rgba(255, 26, 43, 0.9)',
+                  transition: 'width 0.05s linear',
                 }}
-              >
-                {/* Traveling light shimmer highlight */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    width: '24px',
-                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.9))',
-                    animation: 'shimmerBar 1.2s infinite',
-                  }}
-                />
-              </div>
+              />
             </div>
-
-            {/* Progress Percentage & Status */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: '0.45rem',
-                fontSize: '0.76rem',
-              }}
-            >
-              <span style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    background: '#fbbf24',
-                    animation: 'pulseDot 1s infinite alternate',
-                  }}
-                />
-                Ascending to <strong>{activeFloor.name}</strong>
-              </span>
-              <span
-                style={{
-                  fontFamily: 'monospace',
-                  fontWeight: 900,
-                  fontSize: '0.95rem',
-                  color: progress === 100 ? '#4ade80' : '#fbbf24',
-                  letterSpacing: '0.02em',
-                }}
-              >
-                {progress === 100 ? 'READY 100%' : `${progress}%`}
-              </span>
-            </div>
-          </div>
-
-          {/* Floor Live Subtitle & Description */}
-          <div
-            style={{
-              background: 'rgba(0, 0, 0, 0.25)',
-              borderRadius: '8px',
-              padding: '0.45rem 0.65rem',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              fontSize: '0.74rem',
-              color: '#cbd5e1',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <span style={{ fontSize: '1rem' }}>{activeFloor.icon}</span>
-            <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {activeFloor.desc}
-            </span>
           </div>
         </div>
-      </section>
 
-      {/* Bottom Footer Info */}
-      <footer
+        {/* 9. LASER-ENGRAVED ARCHITECTURAL SPECIFICATION PLATE */}
+        <div
+          style={{
+            marginTop: '1.25rem',
+            background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '10px',
+            padding: '0.65rem 1.25rem',
+            textAlign: 'center',
+            fontSize: '0.65rem',
+            letterSpacing: '0.08em',
+            color: '#94a3b8',
+            textTransform: 'uppercase',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+            lineHeight: 1.5,
+          }}
+        >
+          <div style={{ color: '#cbd5e1', fontWeight: 800 }}>
+            RUNDA MALL NAIROBI • 3F FLAGSHIP CONCOURSE
+          </div>
+          <div style={{ color: '#64748b', fontSize: '0.58rem', marginTop: '2px', fontFamily: 'monospace' }}>
+            CAPACITY: 1,200 KG • 16 PERSONS • OTIS ARCHITECTURAL GLASS SERIES
+          </div>
+        </div>
+      </div>
+
+      {/* 10. REALISTIC GLASS ELEVATOR DOORS (Slide open at 3.5s arrival) */}
+      <div
+        aria-hidden="true"
         style={{
-          textAlign: 'center',
-          fontSize: '0.72rem',
-          color: '#64748b',
-          zIndex: 2,
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 30,
           display: 'flex',
-          flexDirection: 'column',
-          gap: '0.2rem',
+          overflow: 'hidden',
         }}
       >
-        <div>The Gents Dollhouse • Miniso Flagship Concept • 6 Storeys of Collector Culture</div>
-        <div style={{ fontSize: '0.66rem', color: '#475569' }}>
-          Zinc-Alloy Die-Cast • 880-Pc Technic • Articulated Mecha • Gashapon Blind Boxes
-        </div>
-      </footer>
+        {/* Left Elevator Sliding Door */}
+        <div
+          style={{
+            flex: 1,
+            height: '100%',
+            background: 'linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 90%, rgba(255, 255, 255, 0.18) 100%)',
+            backdropFilter: 'blur(20px)',
+            borderRight: '2px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '8px 0 24px rgba(0,0,0,0.8)',
+            transform: doorsOpening ? 'translateX(-100%)' : 'translateX(0)',
+            transition: 'transform 0.48s cubic-bezier(0.7, 0, 0.3, 1)',
+          }}
+        />
 
-      {/* Keyframe animations */}
+        {/* Right Elevator Sliding Door */}
+        <div
+          style={{
+            flex: 1,
+            height: '100%',
+            background: 'linear-gradient(270deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 90%, rgba(255, 255, 255, 0.18) 100%)',
+            backdropFilter: 'blur(20px)',
+            borderLeft: '2px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '-8px 0 24px rgba(0,0,0,0.8)',
+            transform: doorsOpening ? 'translateX(100%)' : 'translateX(0)',
+            transition: 'transform 0.48s cubic-bezier(0.7, 0, 0.3, 1)',
+          }}
+        />
+      </div>
+
       <style>{`
-        @keyframes floatBox {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-10px) rotate(2deg);
-          }
-        }
-        @keyframes wobbleBox {
-          0% { transform: scale(0.92) rotate(-8deg); }
-          30% { transform: scale(1.15) rotate(8deg); }
-          60% { transform: scale(0.96) rotate(-4deg); }
-          100% { transform: scale(1) rotate(0deg); }
-        }
-        @keyframes shadowPulse {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.6;
-          }
-          50% {
-            transform: scale(0.82);
-            opacity: 0.35;
-          }
-        }
-        @keyframes spinOrbit {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes spinOrbitReverse {
-          0% { transform: rotate(360deg); }
-          100% { transform: rotate(0deg); }
-        }
-        @keyframes pulseAura {
-          0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-          100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
-        }
-        @keyframes pulseDot {
-          0% { opacity: 0.4; }
-          100% { opacity: 1; }
-        }
-        @keyframes shimmerBar {
-          0% { opacity: 0.3; }
-          50% { opacity: 1; }
-          100% { opacity: 0.3; }
-        }
-        @keyframes fadeFloat {
-          0% {
-            opacity: 1;
-            transform: translate(-50%, 0) scale(0.6);
-          }
-          50% {
-            opacity: 1;
-            transform: translate(calc(-50% + var(--dx, 20px)), -40px) scale(1.2);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(calc(-50% + var(--dx, 30px)), -70px) scale(0.9);
-          }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: translateY(0); }
+          50% { opacity: 0.4; transform: translateY(-2px); }
         }
       `}</style>
     </aside>
