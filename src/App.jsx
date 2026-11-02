@@ -21,9 +21,9 @@ function StoreRouter() {
   const { page } = useStore();
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       <Navbar />
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: '100%', minWidth: 0, overflowX: 'hidden' }}>
         {page === 'home' && <HomePage />}
         {page === 'shop' && <ShopPage />}
         {page === 'product' && <ProductDetailPage />}

@@ -908,7 +908,7 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      <div style={{ position: 'relative' }}>
+                      <div style={{ position: 'relative', width: '100%', maxWidth: '100%', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
                         <img
                           src={heroToy.image}
                           alt={heroToy.name}
@@ -924,7 +924,9 @@ export default function HomePage() {
                             color: '#ffffff',
                             fontSize: '0.72rem',
                             fontWeight: 700,
-                            padding: '0.15rem 0.45rem'
+                            padding: '0.15rem 0.45rem',
+                            borderRadius: '4px',
+                            zIndex: 2
                           }}
                         >
                           {formatPrice(heroToy.price)}
