@@ -53,17 +53,94 @@ const MINISO_SLIDES = [
 ];
 
 const MINISO_FLOORS = [
-  { id: 'garage', label: '1F Speed', sub: 'Die-Cast & RC', color: '#e11d48', icon: '🏎️', tag: 'HOT' },
-  { id: 'workshop', label: '2F Bricks', sub: 'Technic Builds', color: '#d97706', icon: '🧩', tag: '880-PC' },
-  { id: 'vault', label: '3F Mecha', sub: 'Action Figures', color: '#2563eb', icon: '🤖', tag: '32-JOINT' },
-  { id: 'blindbox', label: '4F Mystery', sub: 'Blind Boxes', color: '#e60012', icon: '🎁', tag: 'POP!' },
-  { id: 'arcade', label: '5F Tabletop', sub: 'Speed Cubes', color: '#059669', icon: '🎲', tag: 'PRO' },
-  { id: 'outdoor', label: 'Roof Sky', sub: 'Mini Drones', color: '#0284c7', icon: '🚁', tag: 'NEW' },
-  { id: 'shower', label: 'Shower Gels', sub: 'Bath & Body', color: '#06b6d4', icon: '🚿', tag: 'YUZU' },
-  { id: 'chargers', label: 'Fast Chargers', sub: '65W & Cables', color: '#8b5cf6', icon: '⚡', tag: '65W' },
-  { id: 'fragrance', label: 'Perfumes', sub: 'Colognes & EDP', color: '#ec4899', icon: '🌸', tag: 'PARFUM' },
-  { id: 'bottles', label: 'Water Bottles', sub: '24H Tumblers', color: '#14b8a6', icon: '🥤', tag: '24H' },
-  { id: 'bags', label: 'Laptop Bags', sub: '15.6" Sleeves', color: '#f59e0b', icon: '🎒', tag: 'TECH' }
+  {
+    id: 'garage',
+    label: '1F Speed',
+    sub: 'Die-Cast & RC',
+    color: '#e11d48',
+    image: 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=300&q=80',
+    tag: 'HOT'
+  },
+  {
+    id: 'workshop',
+    label: '2F Bricks',
+    sub: 'Technic Builds',
+    color: '#d97706',
+    image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=300&q=80',
+    tag: '880-PC'
+  },
+  {
+    id: 'vault',
+    label: '3F Mecha',
+    sub: 'Action Figures',
+    color: '#2563eb',
+    image: 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&w=300&q=80',
+    tag: '32-JOINT'
+  },
+  {
+    id: 'blindbox',
+    label: '4F Mystery',
+    sub: 'Blind Boxes',
+    color: '#e60012',
+    image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=300&q=80',
+    tag: 'POP!'
+  },
+  {
+    id: 'arcade',
+    label: '5F Tabletop',
+    sub: 'Speed Cubes',
+    color: '#059669',
+    image: 'https://images.unsplash.com/photo-1591991731833-b4807cf7ef94?auto=format&fit=crop&w=300&q=80',
+    tag: 'PRO'
+  },
+  {
+    id: 'outdoor',
+    label: 'Roof Sky',
+    sub: 'Mini Drones',
+    color: '#0284c7',
+    image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=300&q=80',
+    tag: 'NEW'
+  },
+  {
+    id: 'shower',
+    label: 'Shower Gels',
+    sub: 'Bath & Body',
+    color: '#06b6d4',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=300&q=80',
+    tag: 'YUZU'
+  },
+  {
+    id: 'chargers',
+    label: 'Fast Chargers',
+    sub: '65W & Cables',
+    color: '#8b5cf6',
+    image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=300&q=80',
+    tag: '65W'
+  },
+  {
+    id: 'fragrance',
+    label: 'Perfumes',
+    sub: 'Colognes & EDP',
+    color: '#ec4899',
+    image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=300&q=80',
+    tag: 'PARFUM'
+  },
+  {
+    id: 'bottles',
+    label: 'Water Bottles',
+    sub: '24H Tumblers',
+    color: '#14b8a6',
+    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=300&q=80',
+    tag: '24H'
+  },
+  {
+    id: 'bags',
+    label: 'Laptop Bags',
+    sub: '15.6" Sleeves',
+    color: '#f59e0b',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=300&q=80',
+    tag: 'TECH'
+  }
 ];
 
 const PLINTH_SPECIMENS = [
@@ -192,50 +269,16 @@ export default function HomePage() {
         <div className="miniso-hero-slider" style={{ background: currentSlide.bg }}>
           <div className="miniso-slide-item">
             <div className="miniso-slide-content">
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.06em',
-                  background: 'rgba(0, 0, 0, 0.25)',
-                  color: '#ffffff',
-                  padding: '0.3rem 0.75rem',
-                  borderRadius: '9999px',
-                  width: 'fit-content',
-                  marginBottom: '1rem',
-                  backdropFilter: 'blur(6px)'
-                }}
-              >
-                <SparklesIcon size={14} />
+              <span className="miniso-slide-tag">
+                <SparklesIcon size={13} />
                 <span>{currentSlide.tag}</span>
               </span>
 
-              <h2
-                style={{
-                  fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  lineHeight: 1.02,
-                  letterSpacing: '-0.035em',
-                  marginBottom: '0.85rem',
-                  textShadow: '0 2px 12px rgba(0, 0, 0, 0.45)'
-                }}
-              >
+              <h2 className="miniso-slide-title">
                 {currentSlide.title}
               </h2>
 
-              <p
-                style={{
-                  fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
-                  color: 'rgba(255, 255, 255, 0.92)',
-                  lineHeight: 1.5,
-                  maxWidth: '54ch',
-                  marginBottom: '1.75rem'
-                }}
-              >
+              <p className="miniso-slide-subtitle">
                 {currentSlide.subtitle}
               </p>
 
@@ -318,10 +361,19 @@ export default function HomePage() {
               >
                 <div
                   className="miniso-floor-circle"
-                  style={{ background: f.color }}
+                  style={{ borderColor: f.color }}
                 >
-                  <span>{f.icon}</span>
-                  <span className="miniso-floor-tag">{f.tag}</span>
+                  <div className="miniso-avatar-wrap">
+                    <img
+                      src={f.image}
+                      alt={f.label}
+                      className="miniso-floor-avatar-img"
+                      loading="lazy"
+                    />
+                  </div>
+                  <span className="miniso-floor-tag" style={{ background: f.color }}>
+                    {f.tag}
+                  </span>
                 </div>
                 <div>
                   <div className="miniso-floor-label">{f.label}</div>

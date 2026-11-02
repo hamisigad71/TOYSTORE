@@ -586,12 +586,30 @@ button, input, select, textarea {
   position: relative;
   overflow: hidden;
   transition: background-color var(--transition-smooth);
+  min-height: 520px;
 }
 
 @media (min-width: 768px) {
   .tasteskill-plinth-tile {
     padding: 1.85rem;
+    min-height: 540px;
   }
+}
+
+.plinth-dossier h2 {
+  min-height: 2.1em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.plinth-dossier p {
+  min-height: 3.2em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .plinth-top-bar {
@@ -629,7 +647,9 @@ button, input, select, textarea {
 .tasteskill-plinth-img {
   width: 100%;
   height: 310px;
-  object-fit: cover;
+  object-fit: contain !important;
+  padding: 1rem;
+  box-sizing: border-box;
   display: block;
   transition: transform var(--transition-smooth);
 }
@@ -1683,54 +1703,113 @@ button, input, select, textarea {
   margin-top: 1rem;
   margin-bottom: 2rem;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  /* Locked uniform height across all slides on mobile */
+  height: 520px;
+  min-height: 520px;
+  max-height: 520px;
+}
+
+@media (min-width: 900px) {
+  .miniso-hero-slider {
+    /* Locked uniform height across all slides on desktop */
+    height: 440px;
+    min-height: 440px;
+    max-height: 440px;
+  }
 }
 
 .miniso-slide-item {
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: 420px;
-  transition: opacity 0.5s ease-in-out;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transition: opacity 0.4s ease-in-out;
 }
 
 @media (min-width: 900px) {
   .miniso-slide-item {
     flex-direction: row;
     align-items: center;
-    min-height: 440px;
+    height: 100%;
   }
 }
 
 .miniso-slide-content {
-  flex: 1;
-  padding: 2.5rem 2rem;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   color: #ffffff !important;
+  box-sizing: border-box;
+  padding: 1.5rem 1.25rem 1rem;
+  height: 290px;
+  min-height: 290px;
+  max-height: 290px;
+  overflow: hidden;
 }
 
-.miniso-slide-content h2 {
-  color: #ffffff !important;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
-}
-
-.miniso-slide-content p {
-  color: rgba(255, 255, 255, 0.94) !important;
-}
-
-@media (max-width: 640px) {
+@media (min-width: 640px) {
   .miniso-slide-content {
-    padding: 1.5rem 1rem 1.75rem;
+    padding: 2rem 1.75rem 1rem;
   }
 }
 
 @media (min-width: 900px) {
   .miniso-slide-content {
-    padding: 3.5rem;
+    flex: 1 1 58%;
     max-width: 58%;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    padding: 3rem 2.5rem;
+    justify-content: center;
   }
+}
+
+.miniso-slide-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  width: fit-content;
+  margin-bottom: 0.65rem;
+  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+}
+
+.miniso-slide-title {
+  color: #ffffff !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
+  font-size: clamp(1.6rem, 3.8vw, 2.75rem) !important;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  margin: 0 0 0.5rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.2em; /* Keeps height identical whether title is 1 or 2 lines */
+}
+
+.miniso-slide-subtitle {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: clamp(0.85rem, 1.4vw, 1.02rem) !important;
+  line-height: 1.45;
+  margin: 0 0 1.25rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.9em; /* Keeps height identical whether subtitle is short or long */
 }
 
 /* 2-Column Hero Buttons on Mobile */
@@ -1739,6 +1818,7 @@ button, input, select, textarea {
   grid-template-columns: 1fr 1fr;
   gap: 0.55rem;
   width: 100%;
+  flex-shrink: 0;
 }
 
 @media (min-width: 640px) {
@@ -1784,34 +1864,69 @@ button, input, select, textarea {
 }
 
 .miniso-slide-visual {
-  flex: 1;
+  flex: 1 1 auto;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-height: 260px;
+  height: 240px;
+  min-height: 240px;
+  max-height: 240px;
+  padding: 0.75rem 1.25rem 2.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .miniso-slide-visual {
+    flex: 1 1 42%;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    padding: 2rem;
+  }
 }
 
 .miniso-slide-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.28));
 }
 
 .miniso-hero-slider:hover .miniso-slide-img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .miniso-slider-dots {
   position: absolute;
-  bottom: 1.25rem;
-  left: 2rem;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 0.5rem;
   z-index: 10;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+}
+
+@media (min-width: 900px) {
+  .miniso-slider-dots {
+    left: 2.5rem;
+    transform: none;
+    bottom: 1.5rem;
+    background: transparent;
+    padding: 0;
+    backdrop-filter: none;
+  }
 }
 
 .miniso-dot-btn {
@@ -1877,37 +1992,65 @@ button, input, select, textarea {
 }
 
 .miniso-floor-circle {
-  width: 68px;
-  height: 68px;
+  width: 72px;
+  height: 72px;
   border-radius: 9999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 3px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  border: 2.5px solid var(--border-color);
+  background: var(--bg-surface);
   position: relative;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  box-sizing: border-box;
 }
 
 .miniso-floor-avatar-btn:hover .miniso-floor-circle {
-  box-shadow: 0 8px 18px rgba(230, 0, 18, 0.25);
-  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(230, 0, 18, 0.28);
+  transform: translateY(-3px) scale(1.06);
+  border-color: #e60012 !important;
+}
+
+.miniso-avatar-wrap {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.miniso-floor-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+
+.miniso-floor-avatar-btn:hover .miniso-floor-avatar-img {
+  transform: scale(1.12);
 }
 
 .miniso-floor-tag {
   position: absolute;
-  top: -4px;
-  right: -6px;
+  top: -3px;
+  right: -5px;
   background: #e60012;
   color: #fff;
-  font-size: 0.6rem;
-  font-weight: 800;
-  padding: 0.1rem 0.4rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  padding: 0.12rem 0.45rem;
   border-radius: 9999px;
   text-transform: uppercase;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid #ffffff;
+  z-index: 2;
+  white-space: nowrap;
 }
 
 .miniso-floor-label {
