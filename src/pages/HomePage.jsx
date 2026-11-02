@@ -15,6 +15,15 @@ import {
 
 const MINISO_SLIDES = [
   {
+    tag: 'MINISO LIFESTYLE & DAILY ESSENTIALS • RUNDA MALL 3F',
+    title: 'Shower Gels, 65W Chargers, Perfumes & Bags',
+    subtitle: 'Explore Japanese Yuzu shower gels, 65W GaN fast chargers, Nordic colognes, 24-hr vacuum water bottles, and shockproof laptop backpacks alongside collector toys.',
+    btnLabel: 'Shop Miniso Lifestyle',
+    targetCategory: 'shower',
+    bg: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'
+  },
+  {
     tag: 'NEW DROP • 1:24 DIE-CAST ZINC ALLOY',
     title: 'The Speed Garage 1F',
     subtitle: 'Real metal weight, opening gullwing doors, authentic engine bay, working LED headlights & independent suspension.',
@@ -33,13 +42,13 @@ const MINISO_SLIDES = [
     image: TOY_PRODUCTS[3]?.image || 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1200&q=80'
   },
   {
-    tag: 'FLAGSHIP MULTI-BUY DEAL • 15% OFF 3+ TOYS',
-    title: 'Curate Your 3-Toy Collector Set',
-    subtitle: 'Pick any 3 models across all 6 floors and get 15% discount auto-deducted in your bag with 30-min Runda Mall pickup.',
-    btnLabel: '3-Toy Bundles',
+    tag: 'FLAGSHIP MULTI-BUY DEAL • 15% OFF 3+ ITEMS',
+    title: 'Curate Your 3-Item Set',
+    subtitle: 'Pick any 3 items across all Miniso lifestyle & toy departments and get 15% discount auto-deducted in your bag with 30-min Runda Mall pickup.',
+    btnLabel: '3-Item Bundles',
     targetPage: 'bundles',
     bg: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
-    image: TOY_PRODUCTS[1]?.image || 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=1200&q=80'
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80'
   }
 ];
 
@@ -49,7 +58,12 @@ const MINISO_FLOORS = [
   { id: 'vault', label: '3F Mecha', sub: 'Action Figures', color: '#2563eb', icon: '🤖', tag: '32-JOINT' },
   { id: 'blindbox', label: '4F Mystery', sub: 'Blind Boxes', color: '#e60012', icon: '🎁', tag: 'POP!' },
   { id: 'arcade', label: '5F Tabletop', sub: 'Speed Cubes', color: '#059669', icon: '🎲', tag: 'PRO' },
-  { id: 'outdoor', label: 'Roof Sky', sub: 'Mini Drones', color: '#0284c7', icon: '🚁', tag: 'NEW' }
+  { id: 'outdoor', label: 'Roof Sky', sub: 'Mini Drones', color: '#0284c7', icon: '🚁', tag: 'NEW' },
+  { id: 'shower', label: 'Shower Gels', sub: 'Bath & Body', color: '#06b6d4', icon: '🚿', tag: 'YUZU' },
+  { id: 'chargers', label: 'Fast Chargers', sub: '65W & Cables', color: '#8b5cf6', icon: '⚡', tag: '65W' },
+  { id: 'fragrance', label: 'Perfumes', sub: 'Colognes & EDP', color: '#ec4899', icon: '🌸', tag: 'PARFUM' },
+  { id: 'bottles', label: 'Water Bottles', sub: '24H Tumblers', color: '#14b8a6', icon: '🥤', tag: '24H' },
+  { id: 'bags', label: 'Laptop Bags', sub: '15.6" Sleeves', color: '#f59e0b', icon: '🎒', tag: 'TECH' }
 ];
 
 const PLINTH_SPECIMENS = [
@@ -103,7 +117,17 @@ export default function HomePage() {
   const [slideIdx, setSlideIdx] = useState(0);
   const [activeFloorId, setActiveFloorId] = useState('garage');
   const [homeTab, setHomeTab] = useState('all');
+  const [lifestyleTab, setLifestyleTab] = useState('all');
+  const [showAllMiniso, setShowAllMiniso] = useState(false);
+  const [showAllFloorsMobile, setShowAllFloorsMobile] = useState(false);
   const [receiptIds, setReceiptIds] = useState(['tgd-001', 'tgd-004', 'tgd-007']);
+
+  const LIFESTYLE_ROOM_IDS = ['shower', 'chargers', 'fragrance', 'bottles', 'bags'];
+  const allLifestyleProducts = TOY_PRODUCTS.filter((p) => LIFESTYLE_ROOM_IDS.includes(p.room));
+  const displayedLifestyleProducts =
+    lifestyleTab === 'all'
+      ? (showAllMiniso ? allLifestyleProducts : allLifestyleProducts.slice(0, 4))
+      : allLifestyleProducts.filter((p) => p.room === lifestyleTab);
 
   // Automatic hero slider cycle (6s)
   useEffect(() => {
@@ -130,9 +154,24 @@ export default function HomePage() {
   const specimenProduct =
     TOY_PRODUCTS.find((p) => p.id === currentSpec.productId) || TOY_PRODUCTS[0];
 
+  const featuredCuratedIds = [
+    'tgd-017', // Miniso Japanese Yuzu Shower Gel
+    'tgd-019', // Miniso 65W GaN Fast Charger
+    'tgd-022', // Miniso Nordic Woods Cologne
+    'tgd-024', // Miniso Vacuum Tumbler with Straw
+    'tgd-026', // Miniso Urban Commuter 15.6" Laptop Backpack
+    'tgd-028', // Miniso Shiba Inu Plushie
+    'tgd-001', // Apex GT-R Die-Cast Metal Racer
+    'tgd-004', // Mystery Garage Blind Box Capsule
+    'tgd-003', // Steampunk Locomotive 880-Pc Brick Set
+    'tgd-002', // Cyber-Defender Titan Mecha Figure
+    'tgd-020', // Miniso 10000mAh Magnetic Power Bank
+    'tgd-025'  // Miniso Gradient Sport Water Jug
+  ];
+
   const displayedToys =
     homeTab === 'all'
-      ? TOY_PRODUCTS.slice(0, 8)
+      ? featuredCuratedIds.map((id) => TOY_PRODUCTS.find((p) => p.id === id)).filter(Boolean)
       : TOY_PRODUCTS.filter((p) => p.room === homeTab);
 
   const toggleReceiptItem = (id) => {
@@ -178,10 +217,11 @@ export default function HomePage() {
                 style={{
                   fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
                   fontWeight: 900,
-                  color: currentSlide.textColor,
+                  color: '#ffffff',
                   lineHeight: 1.02,
                   letterSpacing: '-0.035em',
-                  marginBottom: '0.85rem'
+                  marginBottom: '0.85rem',
+                  textShadow: '0 2px 12px rgba(0, 0, 0, 0.45)'
                 }}
               >
                 {currentSlide.title}
@@ -293,6 +333,175 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* MINISO LIFESTYLE & DAILY ESSENTIALS SHOWCASE */}
+      <section className="container" style={{ paddingTop: '0.5rem', paddingBottom: '3rem' }}>
+        <div
+          style={{
+            background: 'var(--bg-surface)',
+            border: '1.5px solid var(--border-color)',
+            borderRadius: 'var(--radius-xl)',
+            padding: 'clamp(1.25rem, 3vw, 2.25rem)',
+            boxShadow: 'var(--card-shadow)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Subtle decorative background accent */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: '240px',
+              height: '240px',
+              background: 'radial-gradient(circle at 100% 0%, rgba(230,0,18,0.1) 0%, transparent 70%)',
+              pointerEvents: 'none'
+            }}
+          />
+
+          <div className="section-header" style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                <span className="badge badge-red">
+                  MINISO SIGNATURE ESSENTIALS
+                </span>
+                <span className="badge" style={{ background: '#06b6d4', color: '#fff' }}>
+                  🚿 SHOWER GELS
+                </span>
+                <span className="badge" style={{ background: '#8b5cf6', color: '#fff' }}>
+                  ⚡ 65W CHARGERS
+                </span>
+                <span className="badge" style={{ background: '#ec4899', color: '#fff' }}>
+                  🌸 PERFUMES
+                </span>
+                <span className="badge" style={{ background: '#14b8a6', color: '#fff' }}>
+                  🥤 WATER BOTTLES
+                </span>
+                <span className="badge" style={{ background: '#f59e0b', color: '#fff' }}>
+                  🎒 LAPTOP BAGS
+                </span>
+              </div>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-google-display)',
+                  fontSize: 'clamp(1.85rem, 3.5vw, 2.85rem)',
+                  fontWeight: 800,
+                  lineHeight: 1.05,
+                  letterSpacing: '-0.03em',
+                  color: 'var(--text-primary)'
+                }}
+              >
+                Miniso Everyday Lifestyle &amp; Tech Essentials
+              </h2>
+              <p className="section-subtitle" style={{ maxWidth: '64ch', marginTop: '0.45rem' }}>
+                Beyond toys: discover Miniso’s iconic personal care, high-speed GaN fast charging, long-lasting Parisian fragrances, 24-hr ice-cold tumblers, and shockproof commuter laptop backpacks—all safety certified and ready for Nairobi same-day dispatch.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShopCategory('all');
+                navigate('shop');
+              }}
+              className="btn btn-primary"
+              style={{ flexShrink: 0 }}
+            >
+              <span>Browse All 28 Products</span>
+              <ArrowRightIcon size={15} />
+            </button>
+          </div>
+
+          {/* Miniso Single-Row Horizontal Scrollable Filter Bar */}
+          <div className="miniso-filter-wrapper" style={{ position: 'relative', zIndex: 1 }}>
+            <div className="miniso-filter-bar">
+              {[
+                { id: 'all', label: 'All Miniso Essentials', count: allLifestyleProducts.length, icon: '✨' },
+                { id: 'shower', label: 'Shower Gels', count: 2, icon: '🚿' },
+                { id: 'chargers', label: 'Fast Chargers', count: 3, icon: '⚡' },
+                { id: 'fragrance', label: 'Perfumes & Cologne', count: 2, icon: '🌸' },
+                { id: 'bottles', label: 'Water Bottles', count: 2, icon: '🥤' },
+                { id: 'bags', label: 'Laptop Bags', count: 2, icon: '🎒' }
+              ].map((tab) => {
+                const isActive = lifestyleTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setLifestyleTab(tab.id);
+                      if (tab.id !== 'all') {
+                        setShowAllMiniso(true);
+                      }
+                    }}
+                    className={`miniso-filter-pill ${isActive ? 'active' : ''}`}
+                  >
+                    <span>{tab.icon}</span>
+                    <span>{tab.label}</span>
+                    <span className="pill-badge">{tab.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Active Filter Live Feedback & Quick Reset Bar */}
+          {lifestyleTab !== 'all' && (
+            <div className="miniso-filter-feedback" style={{ position: 'relative', zIndex: 1 }}>
+              <div className="feedback-content">
+                <span className="feedback-dot" />
+                <span>
+                  Showing <strong>{displayedLifestyleProducts.length}</strong> items in{' '}
+                  <strong>
+                    {
+                      {
+                        shower: 'Shower Gels',
+                        chargers: 'Fast Chargers & Power Hub',
+                        fragrance: 'Perfumes & Fine Cologne',
+                        bottles: 'Water Bottles & Tumblers',
+                        bags: 'Laptop Bags & Tech Sleeves'
+                      }[lifestyleTab] || lifestyleTab
+                    }
+                  </strong>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setLifestyleTab('all')}
+                className="feedback-reset-btn"
+              >
+                <span>View All ({allLifestyleProducts.length})</span>
+                <span className="feedback-reset-x">✕</span>
+              </button>
+            </div>
+          )}
+
+          {/* Miniso Lifestyle Products Grid */}
+          <div className="product-grid" style={{ position: 'relative', zIndex: 1 }}>
+            {displayedLifestyleProducts.map((product) => (
+              <ProductCard key={product.id} toy={product} />
+            ))}
+          </div>
+
+          {/* Compact View Toggle: Prevents 5,000px of scrolling on mobile */}
+          {lifestyleTab === 'all' && allLifestyleProducts.length > 4 && (
+            <div style={{ textAlign: 'center', marginTop: '1.75rem', position: 'relative', zIndex: 1 }}>
+              <button
+                type="button"
+                onClick={() => setShowAllMiniso((prev) => !prev)}
+                className="miniso-expand-btn"
+              >
+                <span>
+                  {showAllMiniso
+                    ? 'Show Top 4 Highlights ↑'
+                    : `Show All ${allLifestyleProducts.length} Miniso Essentials (${allLifestyleProducts.length - 4} More) ↓`}
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* 1. TASTESKILL HERO: Architectural Collector Stage & Interactive Specimen Plinth */}
       <section className="container tasteskill-hero" style={{ paddingTop: '0.5rem' }}>
         {/* Masthead Header + Storefront Metrics */}
@@ -310,7 +519,7 @@ export default function HomePage() {
                 marginTop: '1rem'
               }}
             >
-              Nairobi&apos;s multi-floor collector toy emporium. Explore die-cast zinc-alloy supercars, 880-piece mechanical brick builds, 32-joint mecha figures, and Miniso-style mystery capsules—all priced in Kenyan Shillings (KSh).
+              Nairobi&apos;s premier Miniso lifestyle and collector toy emporium. Explore Japanese Yuzu shower gels, 65W GaN fast chargers, Nordic colognes, insulated vacuum water bottles, shockproof laptop bags, 880-piece technic models, and mystery capsules—all in Kenyan Shillings (KSh).
             </p>
           </div>
 
@@ -323,9 +532,9 @@ export default function HomePage() {
                 <span className="hero-metric-sub">30-Min Counter Pickup</span>
               </div>
               <div className="hero-metric-box">
-                <span className="hero-metric-label">Collector Range</span>
-                <strong className="hero-metric-value tabular-nums">KSh 2,340+</strong>
-                <span className="hero-metric-sub">100% Authentic Models</span>
+                <span className="hero-metric-label">Miniso Essentials</span>
+                <strong className="hero-metric-value tabular-nums">5 Categories</strong>
+                <span className="hero-metric-sub">Shower, Power &amp; Bags</span>
               </div>
               <div className="hero-metric-box">
                 <span className="hero-metric-label">Multi-Buy Deal</span>
@@ -341,23 +550,26 @@ export default function HomePage() {
                 className="btn btn-primary"
                 style={{ flex: '1 1 auto' }}
               >
-                <span>Browse All 16 Toys</span>
+                <span>Browse All 28 Products</span>
                 <ArrowRightIcon size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShopCategory('shower');
+                  navigate('shop');
+                }}
+                className="btn btn-secondary"
+                style={{ flex: '1 1 auto' }}
+              >
+                <span>Miniso Lifestyle</span>
               </button>
               <button
                 type="button"
                 onClick={() => navigate('blindbox')}
                 className="btn btn-secondary"
-                style={{ flex: '1 1 auto' }}
               >
-                <span>Open Mystery Studio</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('rooms')}
-                className="btn btn-secondary"
-              >
-                <span>6-Floor Map</span>
+                <span>Mystery Studio</span>
               </button>
             </div>
           </div>
@@ -733,14 +945,14 @@ export default function HomePage() {
                 letterSpacing: '-0.035em'
               }}
             >
-              Six floors to explore
+              Explore Flagship Departments
             </h2>
-            <p className="section-subtitle" style={{ maxWidth: '58ch' }}>
-              Every zone in The Gents Dollhouse is organized like a room in a collector’s house. Select any floor below to preview its live shelf and KSh prices, or step straight inside the department.
+            <p className="section-subtitle" style={{ maxWidth: '62ch' }}>
+              From collector die-cast supercars and technic builds to Miniso shower gels, 65W GaN fast chargers, Nordic colognes, 24-hr vacuum water bottles, and shockproof laptop backpacks. Select any department below to preview its live shelf in KSh:
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+          <div className="floor-selector-bar">
             {DOLLHOUSE_ROOMS.filter((r) => r.id !== 'all').map((room) => {
               const isCurrent = activeFloorId === room.id;
               return (
@@ -750,10 +962,16 @@ export default function HomePage() {
                   onClick={() => setActiveFloorId(room.id)}
                   className="btn"
                   style={{
-                    padding: '0.55rem 0.95rem',
+                    padding: '0.48rem 0.95rem',
                     fontSize: '0.82rem',
+                    fontWeight: 700,
+                    borderRadius: '9999px',
+                    flexShrink: 0,
+                    border: isCurrent ? `1.5px solid ${room.color}` : '1px solid var(--border-color)',
                     background: isCurrent ? room.color : 'var(--bg-surface)',
-                    color: isCurrent ? '#ffffff' : 'var(--text-primary)'
+                    color: isCurrent ? '#ffffff' : 'var(--text-primary)',
+                    boxShadow: isCurrent ? `0 4px 12px ${room.color}40` : 'none',
+                    transition: 'all 0.18s ease'
                   }}
                 >
                   {room.floor}
@@ -784,13 +1002,14 @@ export default function HomePage() {
                     heroToy.price
                   );
                   const isSelected = room.id === spotlightFloor.id;
+                  const hideOnMobile = !showAllFloorsMobile && !isSelected;
 
                   return (
                     <div
                       key={room.id}
                       onMouseEnter={() => setActiveFloorId(room.id)}
                       onClick={() => setActiveFloorId(room.id)}
-                      className={`floor-arch-card ${isSelected ? 'active' : ''}`}
+                      className={`floor-arch-card ${isSelected ? 'active' : ''} ${hideOnMobile ? 'hide-mobile-floor' : ''}`}
                       style={{
                         borderLeft: `6px solid ${room.color}`
                       }}
@@ -935,6 +1154,18 @@ export default function HomePage() {
                     </div>
                   );
                 })}
+                {!showAllFloorsMobile && (
+                  <div className="show-mobile-only" style={{ textAlign: 'center', marginTop: '0.25rem', marginBottom: '1rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowAllFloorsMobile(true)}
+                      className="miniso-expand-btn"
+                      style={{ fontSize: '0.78rem', padding: '0.45rem 1.15rem' }}
+                    >
+                      <span>Show All {floorsOnly.length} Departments Stack ↓</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Right Column: Sticky Live Floor Spotlight Stage */}
@@ -1112,25 +1343,54 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-            {DOLLHOUSE_ROOMS.map((room) => (
-              <button
-                key={room.id}
-                type="button"
-                onClick={() => setHomeTab(room.id)}
-                className="btn"
-                style={{
-                  padding: '0.5rem 0.95rem',
-                  fontSize: '0.84rem',
-                  background: homeTab === room.id ? 'var(--brand-primary)' : 'var(--bg-surface)',
-                  color: homeTab === room.id ? '#ffffff' : 'var(--text-primary)'
-                }}
-              >
-                {room.id === 'all' ? 'All Floors' : room.floor}
-              </button>
-            ))}
+          <div className="floor-selector-bar">
+            {DOLLHOUSE_ROOMS.map((room) => {
+              const isActive = homeTab === room.id;
+              return (
+                <button
+                  key={room.id}
+                  type="button"
+                  onClick={() => setHomeTab(room.id)}
+                  className="btn"
+                  style={{
+                    padding: '0.48rem 0.95rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    borderRadius: '9999px',
+                    flexShrink: 0,
+                    border: isActive ? '1.5px solid var(--brand-primary)' : '1px solid var(--border-color)',
+                    background: isActive ? 'var(--brand-primary)' : 'var(--bg-surface)',
+                    color: isActive ? '#ffffff' : 'var(--text-primary)',
+                    boxShadow: isActive ? '0 4px 12px rgba(230,0,18,0.25)' : 'none',
+                    transition: 'all 0.18s ease'
+                  }}
+                >
+                  {room.id === 'all' ? 'All Floors' : room.floor}
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {homeTab !== 'all' && (
+          <div className="miniso-filter-feedback" style={{ marginBottom: '1.25rem' }}>
+            <div className="feedback-content">
+              <span className="feedback-dot" />
+              <span>
+                Showing <strong>{displayedToys.length}</strong> items in{' '}
+                <strong>{DOLLHOUSE_ROOMS.find((r) => r.id === homeTab)?.name || homeTab}</strong>
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHomeTab('all')}
+              className="feedback-reset-btn"
+            >
+              <span>View All Floors</span>
+              <span className="feedback-reset-x">✕</span>
+            </button>
+          </div>
+        )}
 
         <div className="product-grid">
           {displayedToys.map((product) => (
