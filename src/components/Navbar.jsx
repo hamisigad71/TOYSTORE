@@ -77,7 +77,7 @@ export default function Navbar() {
                 cursor: 'pointer'
               }}
             >
-              Runda Mall, 3rd Floor • 0742630973
+              Runda Mall, 3rd Floor • 0768987084
             </button>
 
             {/* Currency Switcher */}

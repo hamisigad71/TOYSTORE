@@ -94,8 +94,8 @@ export default function Footer() {
                 <div style={{ fontWeight: 700, color: '#fed878' }}>Customer Care Desk</div>
                 <div>
                   Phone / WhatsApp:{' '}
-                  <a href="tel:0742630973" style={{ color: '#ffffff', fontWeight: 700 }}>
-                    0742630973
+                  <a href="tel:0768987084" style={{ color: '#ffffff', fontWeight: 700 }}>
+                    0768987084
                   </a>
                 </div>
                 <div>
@@ -125,7 +125,7 @@ export default function Footer() {
               gap: '0.75rem'
             }}
           >
-            <span>© 2026 The Gents Dollhouse • Runda Mall, 3rd Floor • 0742630973</span>
+            <span>© 2026 The Gents Dollhouse • Runda Mall, 3rd Floor • 0768987084</span>
             <span>ASTM F963 &amp; CE EN71 Certified Wholesome Toys</span>
           </div>
         </div>

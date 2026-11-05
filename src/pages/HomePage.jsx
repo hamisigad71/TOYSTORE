@@ -1587,7 +1587,7 @@ export default function HomePage() {
                 THE GENTS DOLLHOUSE
               </div>
               <div style={{ textAlign: 'center', fontSize: '0.82rem', color: '#52524e', marginBottom: '1.5rem' }}>
-                Runda Mall, 3rd Floor • Care: 0742630973
+                Runda Mall, 3rd Floor • Care: 0768987084
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -1751,7 +1751,7 @@ export default function HomePage() {
                 textDecoration: 'none'
               }}
             >
-              <span>Order via WhatsApp (0742630973)</span>
+              <span>Order via WhatsApp (0768987084)</span>
             </a>
             <button
               type="button"
@@ -1812,7 +1812,7 @@ export default function HomePage() {
 
           <div style={{ marginTop: '1.25rem', fontSize: '0.95rem' }}>
             <div>
-              Customer Care: <strong className="tabular-nums">0742630973</strong>
+              Customer Care: <strong className="tabular-nums">0768987084</strong>
             </div>
             <div style={{ marginTop: '0.2rem' }}>
               Email: <strong>thegenttoystore@gmail.com</strong>

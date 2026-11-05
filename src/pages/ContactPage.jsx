@@ -20,7 +20,7 @@ export default function ContactPage() {
   const [email, setEmail] = useState('');
   const [orderId, setOrderId] = useState('');
   const [topic, setTopic] = useState('Order Status & Express Delivery');
-  const [channel, setChannel] = useState('WhatsApp (0742630973)');
+  const [channel, setChannel] = useState('WhatsApp (0768987084)');
   const [message, setMessage] = useState('');
 
   // Persisted Customer Support Tickets
@@ -73,7 +73,7 @@ export default function ContactPage() {
     };
 
     setTickets((prev) => [newTicket, ...prev]);
-    showToast(`Support Ticket #${newTicket.id} created! Our Customer Care team (0742630973) will respond shortly.`);
+    showToast(`Support Ticket #${newTicket.id} created! Our Customer Care team (0768987084) will respond shortly.`);
     setFullName('');
     setPhone('');
     setEmail('');
@@ -133,7 +133,7 @@ export default function ContactPage() {
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
               <a
-                href="tel:0742630973"
+                href="tel:0768987084"
                 className="btn btn-primary"
                 style={{ flex: 1, padding: '0.55rem 0.85rem', fontSize: '0.78rem', textDecoration: 'none' }}
               >
@@ -186,7 +186,7 @@ export default function ContactPage() {
               Customer Care Line
             </h2>
             <div style={{ fontSize: '1.65rem', fontWeight: 900, color: 'var(--brand-primary)', marginTop: '0.35rem' }}>
-              0742630973
+              0768987084
             </div>
             <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '0.45rem', lineHeight: 1.55 }}>
               Call or WhatsApp our Runda Mall customer care specialists for instant help with M-Pesa orders, same-day motorbike delivery, or toy stock checks.
@@ -199,12 +199,12 @@ export default function ContactPage() {
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.25rem', paddingTop: '1rem' }}>
-            <a href="tel:0742630973" className="btn btn-primary" style={{ flex: 1, fontSize: '0.8rem' }}>
-              Call 0742630973
+            <a href="tel:0768987084" className="btn btn-primary" style={{ flex: 1, fontSize: '0.8rem' }}>
+              Call 0768987084
             </a>
             <button
               type="button"
-              onClick={() => copyToClipboard('0742630973', 'Customer Care Number')}
+              onClick={() => copyToClipboard('0768987084', 'Customer Care Number')}
               className="btn btn-secondary"
               style={{ fontSize: '0.8rem' }}
             >
@@ -335,7 +335,7 @@ export default function ContactPage() {
             Send Us a Message or Open a Support Ticket
           </h2>
           <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '0.25rem', marginBottom: '1.25rem' }}>
-            Fill out the form below and our Runda Mall 3rd Floor Customer Care team (<strong>0742630973</strong> / <strong>thegenttoystore@gmail.com</strong>) will get right back to you.
+            Fill out the form below and our Runda Mall 3rd Floor Customer Care team (<strong>0768987084</strong> / <strong>thegenttoystore@gmail.com</strong>) will get right back to you.
           </p>
 
           <form onSubmit={handleTicketSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
@@ -422,8 +422,8 @@ export default function ContactPage() {
                   onChange={(e) => setChannel(e.target.value)}
                   className="input-field"
                 >
-                  <option>WhatsApp (0742630973)</option>
-                  <option>Direct Phone Call (0742630973)</option>
+                  <option>WhatsApp (0768987084)</option>
+                  <option>Direct Phone Call (0768987084)</option>
                   <option>Email (thegenttoystore@gmail.com)</option>
                 </select>
               </div>
@@ -594,7 +594,7 @@ export default function ContactPage() {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.82rem' }}>
               {[
-                { dept: 'Customer Care & Order Tracking', contact: '0742630973', sub: 'Call or WhatsApp (Instant Response)' },
+                { dept: 'Customer Care & Order Tracking', contact: '0768987084', sub: 'Call or WhatsApp (Instant Response)' },
                 { dept: 'Official Store Email Desk', contact: 'thegenttoystore@gmail.com', sub: 'Orders, Receipts & Bulk Quotes' },
                 { dept: 'In-Store Pickup & Returns Counter', contact: 'Runda Mall, 3rd Floor', sub: 'Ready in 30 Mins • Free Gift Wrap' }
               ].map((row) => (

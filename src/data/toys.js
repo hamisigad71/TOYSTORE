@@ -1203,7 +1203,7 @@ export const STORE_LOCATIONS = [
     city: 'Runda Mall, 3rd Floor',
     address: '3rd Floor, Runda Mall (Main Atrium Wing), Nairobi',
     hours: 'Mon to Sun: 9:00 AM to 8:30 PM',
-    phone: '0742630973',
+    phone: '0768987084',
     email: 'thegenttoystore@gmail.com',
     status: 'Open Now • Flagship Store & Customer Care Desk',
     features: ['6 Interactive Toy Zones', 'Mystery Capsule Wall', '30-Min Click & Collect Desk', 'Free Gift Wrapping'],
@@ -1215,7 +1215,7 @@ export const STORE_LOCATIONS = [
     city: 'Runda Mall, 3rd Floor (Suite 304)',
     address: '3rd Floor, Runda Mall, Interactive Hobby Wing',
     hours: 'Mon to Sun: 9:30 AM to 8:30 PM',
-    phone: '0742630973',
+    phone: '0768987084',
     email: 'thegenttoystore@gmail.com',
     status: 'Open Now • RC Drift Track & Build Tables Active',
     features: ['Indoor Mini RC Drift Track', 'Blind-Box Trading Station', 'Weekend Brick Workshops'],
@@ -1275,7 +1275,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: 'How do I reach Customer Care directly?',
-    a: 'Call or WhatsApp our Runda Mall 3rd Floor Customer Care team on 0742630973, or email thegenttoystore@gmail.com between 9:00 AM and 8:30 PM daily.'
+    a: 'Call or WhatsApp our Runda Mall 3rd Floor Customer Care team on 0768987084, or email thegenttoystore@gmail.com between 9:00 AM and 8:30 PM daily.'
   },
   {
     q: 'Do you offer franchise or wholesale partnerships?',
